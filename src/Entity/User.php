@@ -49,6 +49,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"user_listing:read","user_listing:write"})
      */
     private $isActive;
 
