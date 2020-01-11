@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AuthController extends AbstractController
 {
+
     public function creationuser(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $em = $this->getDoctrine()->getManager();
@@ -27,11 +28,19 @@ class AuthController extends AbstractController
 
         $user = new User($username);
         $user->setPassword($encoder->encodePassword($user,$password));
-        $user->setRoles($roles);
+        $user->setRoles(array($roles));
+
+        print_r($user);
+        die();
         
         $em->persist($user);
         $em->flush();
 
         return new Response(sprintf("User %s ajouter avec success", $user->getUsername()));
+    }
+
+    public function __invoke(Request $request,UserPasswordEncoderInterface $encoder)
+    {
+        $this->creationuser($request, $encoder);
     }
 }

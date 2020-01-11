@@ -6,16 +6,30 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\AuthController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @ApiResource(
+ *            
+ *          collectionOperations={
+ *              "get"={"access_control"= "is_granted('ROLE_ADMIN')"} ,
+ *              "post"={"access_control"= "is_granted('ROLE_ADMIN')"} 
+ *           },
+ *           itemOperations={
+ *              "get"= {"access_control"= "is_granted('ROLE_CAISSIER') and object == user or is_granted('ROLE_ADMIN') and object == user or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_CAISSIER' or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_ADMIN' or is_granted('ROLE_SUPER_ADMIN')"} ,
+ *              "put"= {"access_control"= "is_granted('ROLE_ADMIN') and object == user or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_CAISSIER' or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_ADMIN' or is_granted('ROLE_SUPER_ADMIN') "},
+ *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN')"} 
+ *                
+ *           },
  *          normalizationContext={"groups" = {"user_listing:read"}},
  *          denormalizationContext={"groups" = {"user_listing:write"}},         
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
-class User implements UserInterface
+class User implements AdvancedUserInterface
 {
     /**
      * @ORM\Id()
@@ -39,6 +53,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"user_listing:write"})
      */
     private $password;
 
@@ -49,17 +64,45 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"user_listing:read","user_listing:write"})
+     *  @Groups({"user_listing:read","user_listing:write"})
      */
     private $isActive;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user_listing:read","user_listing:write"})
+     */
+    private $role;
 
+    //private $encoder;
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
+    }
 
     public function __construct($username)
     {
         $this->isActive = true;
         $this->username = $username;
         $this->createdAt = new \DateTime();
+        //$this->encoder = $encoder;
     }
 
     public function getId(): ?int
@@ -113,6 +156,8 @@ class User implements UserInterface
 
     public function setPassword(string $password): self
     {
+        
+       // $user = new User($this->encoder);
         $this->password = $password;
 
         return $this;
@@ -155,6 +200,18 @@ class User implements UserInterface
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }
