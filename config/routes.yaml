@@ -10,6 +10,11 @@ login_check:
   path: /login_check
   methods: [POST]
 
+connexion:
+  path: /connexion_check
+  methods: [POST]
+
+
 swagger_ui:
   path: /docs
   controller: api_platform.swagger.action.ui

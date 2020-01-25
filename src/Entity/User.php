@@ -75,6 +75,11 @@ class User implements AdvancedUserInterface
      */
     private $role;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Partenaire", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $partenaire;
+
     //private $encoder;
 
     public function isAccountNonExpired()
@@ -212,6 +217,23 @@ class User implements AdvancedUserInterface
     public function setRole(?Role $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
+
+        // set the owning side of the relation if necessary
+        if ($partenaire->getUser() !== $this) {
+            $partenaire->setUser($this);
+        }
 
         return $this;
     }

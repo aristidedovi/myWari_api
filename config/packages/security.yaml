@@ -3,7 +3,9 @@ security:
         App\Entity\User:
             algorithm: bcrypt
 
+
     role_hierarchy:
+        ROLE_CAISSIER: ROLE_ADMIN_PARTENAIRE
         ROLE_ADMIN: ROLE_CAISSIER
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
@@ -14,6 +16,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -23,6 +26,7 @@ security:
             pattern: ^/login
             stateless: true
             anonymous: true
+            provider: entity_provider
             json_login:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
