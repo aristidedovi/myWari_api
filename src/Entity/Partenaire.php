@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ApiResource()
@@ -39,6 +40,7 @@ class Partenaire
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="partenaire", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @ApiSubresource()
      */
     private $user;
 

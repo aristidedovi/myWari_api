@@ -9,6 +9,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\AuthController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource(
@@ -18,8 +20,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *              "post"={"access_control"= "is_granted('ROLE_ADMIN')"} 
  *           },
  *           itemOperations={
- *              "get"= {"access_control"= "is_granted('ROLE_CAISSIER') and object == user or is_granted('ROLE_ADMIN') and object == user or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_CAISSIER' or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_ADMIN' or is_granted('ROLE_SUPER_ADMIN')"} ,
- *              "put"= {"access_control"= "is_granted('ROLE_ADMIN') and object == user or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_CAISSIER' or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_ADMIN' or is_granted('ROLE_SUPER_ADMIN') "},
+ *              "get"= {"access_control"= "is_granted('VIEW', object)"} ,
+ *              "put"= {"access_control"= "is_granted('EDIT', object)"},
  *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN')"} 
  *                
  *           },
@@ -53,9 +55,15 @@ class User implements AdvancedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"user_listing:write"})
+     *
      */
     private $password;
+
+    /**
+     * @SerializedName("password")
+     * @Groups({"user_listing:write"})
+     */
+    private $plainPassword;
 
     /**
      * @ORM\Column(type="datetime")
@@ -77,13 +85,17 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Partenaire", mappedBy="user", cascade={"persist", "remove"})
+     * @ApiSubresource()
      */
     private $partenaire;
+
+
 
     //private $encoder;
 
     public function isAccountNonExpired()
     {
+        /*"put"= {"access_control"= "is_granted('ROLE_ADMIN') and object == user or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_CAISSIER' or is_granted('ROLE_ADMIN') and object.getRoles()[0] == 'ROLE_ADMIN' or is_granted('ROLE_SUPER_ADMIN') "},*/
         return true;
     }
 
@@ -234,6 +246,18 @@ class User implements AdvancedUserInterface
         if ($partenaire->getUser() !== $this) {
             $partenaire->setUser($this);
         }
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

@@ -23,7 +23,7 @@ class UsersHashPasswordListener implements EventSubscriber
     
     public function prePersist(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
+       /* $entity = $args->getEntity();
         if (!$entity instanceof User) {
             return;
         }
@@ -31,7 +31,7 @@ class UsersHashPasswordListener implements EventSubscriber
             $entity,
             $entity->getPassword()
         );
-        $entity->setPassword($encoded);
+        $entity->setPassword($encoded);*/
        // $this->encodePassword($entity);
     }
 
@@ -40,19 +40,19 @@ class UsersHashPasswordListener implements EventSubscriber
      */
     private function encodePassword(User $entity)
     {
-        if (!$entity->getPassword()) {
+       /* if (!$entity->getPassword()) {
             return;
         }
         $encoded = $this->passwordEncoder->encodePassword(
             $entity,
             $entity->getPassword()
         );
-        $entity->setPassword($encoded);
+        $entity->setPassword($encoded);*/
     }
 
     public function preUpdate(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
+       /* $entity = $args->getEntity();
         if (!$entity instanceof User) {
             return;
         }
@@ -60,6 +60,6 @@ class UsersHashPasswordListener implements EventSubscriber
         // necessary to force the update to see the change
         $em = $args->getEntityManager();
         $meta = $em->getClassMetadata(get_class($entity));
-        $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $entity);
+        $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $entity);*/
     }
 }

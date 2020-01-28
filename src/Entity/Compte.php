@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
+ * 
  */
 class Compte
 {
@@ -36,6 +38,7 @@ class Compte
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
      * @ORM\JoinColumn(nullable=false)
+     * @ApiSubresource()
      */
     private $partenaire;
 
