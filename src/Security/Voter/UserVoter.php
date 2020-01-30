@@ -40,6 +40,8 @@ class UserVoter extends Voter
                 // return true or false
                 if($subject === $user && $this->security->isGranted('ROLE_ADMIN')){
                     return true;
+                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                    # code...
                 }
                 break;
             case 'VIEW':

@@ -3,11 +3,23 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *              collectionOperations={
+ *                  "get",
+ *                  "post_compte"={
+ *                      "route_name"="creation_compte"
+ *                  }
+ *              },
+ *              itemOperations={
+ *                  "get",
+ *              }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
  * 
  */
@@ -41,6 +53,17 @@ class Compte
      * @ApiSubresource()
      */
     private $partenaire;
+
+    /**
+     * @ApiSubresource()
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="compte", orphanRemoval=true)
+     */
+    private $depots;
+
+    public function __construct()
+    {
+        $this->depots = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +114,37 @@ class Compte
     public function setPartenaire(?Partenaire $partenaire): self
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Depot $depot): self
+    {
+        if ($this->depots->contains($depot)) {
+            $this->depots->removeElement($depot);
+            // set the owning side to null (unless already changed)
+            if ($depot->getCompte() === $this) {
+                $depot->setCompte(null);
+            }
+        }
 
         return $this;
     }
