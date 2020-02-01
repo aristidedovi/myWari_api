@@ -18,9 +18,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          },
  *              itemOperations={
  *                  "get"
- *              }
- *         
- *          
+ *              },
+ *          normalizationContext={"groups" = {"compte:read"}},
+ *          denormalizationContext={"groups" = {"compte:write"}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
  * 
@@ -36,18 +36,21 @@ class Compte
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
      * 
      */
     private $numero;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
      * 
      */
     private $solde;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $create_at;
 
@@ -55,12 +58,14 @@ class Compte
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
      * @ORM\JoinColumn(nullable=false)
      * @ApiSubresource()
+     * @Groups({"compte:read","compte:write"})
      */
     private $partenaire;
 
     /**
      * @ApiSubresource()
      * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="compte", orphanRemoval=true)
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
      */
     private $depots;
 

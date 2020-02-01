@@ -21,15 +21,15 @@ class Depot
 
     /**
      * @ORM\Column(type="integer")
-     * 
+     * @Groups({"partenaire:read","partenaire:write"})
      */
     private $mntDeposser;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
+     * @Groups({"partenaire:read","partenaire:write"})
      */
-    private $deposser_at;
+    private $deposserAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
@@ -39,7 +39,7 @@ class Depot
 
     public function __construct()
     {
-        $this->deposser_at = new \DateTime();
+        $this->deposserAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -61,12 +61,12 @@ class Depot
 
     public function getDeposserAt(): ?\DateTimeInterface
     {
-        return $this->deposser_at;
+        return $this->deposserAt;
     }
 
-    public function setDeposserAt(\DateTimeInterface $deposser_at): self
+    public function setDeposserAt(\DateTimeInterface $deposserAt): self
     {
-        $this->deposser_at = $deposser_at;
+        $this->deposserAt = $deposserAt;
 
         return $this;
     }

@@ -7,6 +7,7 @@ use App\Entity\Depot;
 use App\Entity\Partenaire;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Security\CompteNumero;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,27 +52,33 @@ class CreationCompteController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Role::class);
         $role = $repo->find($role[0]);
         $user->setRole($role);
-        $em->persist($user);
+      //  $em->persist($user);
 
 
         $partenaire = new Partenaire();
         $partenaire->setNinea($json->partenaire->ninea);
         $partenaire->setRc($json->partenaire->rc);
-        $partenaire->setUser($user);
-        $em->persist($partenaire);
+        $partenaire->addUser($user);
+      //  $em->persist($partenaire);
         
         $compte = new Compte();
-        $compte->setNumero($json->numero);
+
+        $numero = new CompteNumero();
+        $repo = $this->getDoctrine()->getRepository(Compte::class);
+        $resultat = $repo->findOneBy([], ['id' => 'desc']);
+
+        $numero = $numero->getCompteNumero($user->getUsername(), $resultat->getId());
+        $compte->setNumero($numero);
         $compte->setPartenaire($partenaire);
         $compte->setSolde($json->depots->mntDeposser);
-        $em->persist($compte);
+       // $em->persist($compte);
 
         $depot = new Depot();
         $depot->setMntDeposser($json->depots->mntDeposser);
         $depot->setCompte($compte);
-        $em->persist($depot);
+       // $em->persist($depot);
 
-        $em->flush();
+       // $em->flush();
 
        
 
@@ -93,6 +100,11 @@ class CreationCompteController extends AbstractController
         //die();
         //print_r($role);
         //print_r($user);
-        return  new JsonResponse($json);   
+        //$compte = (array)$compte;
+        $response = new Response();
+        $response->setContent($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return new JsonResponse($json);   
     }
 }

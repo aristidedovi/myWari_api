@@ -67,12 +67,13 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
-     *  @Groups({"user_listing:read","user_listing:write"})
+     * @Groups({"user_listing:read","user_listing:write"})
      */
     private $isActive;
 
@@ -84,12 +85,11 @@ class User implements AdvancedUserInterface
     private $role;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Partenaire", mappedBy="user", cascade={"persist", "remove"})
-     * @ApiSubresource()
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
+     * 
+     * @Groups({"user_listing:read","user_listing:write", "partenaire:read"})
      */
     private $partenaire;
-
-
 
     //private $encoder;
 
@@ -233,22 +233,6 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    public function getPartenaire(): ?Partenaire
-    {
-        return $this->partenaire;
-    }
-
-    public function setPartenaire(Partenaire $partenaire): self
-    {
-        $this->partenaire = $partenaire;
-
-        // set the owning side of the relation if necessary
-        if ($partenaire->getUser() !== $this) {
-            $partenaire->setUser($this);
-        }
-
-        return $this;
-    }
 
     public function getPlainPassword(): ?string
     {
@@ -261,4 +245,17 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
 }

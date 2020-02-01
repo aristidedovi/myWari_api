@@ -11,7 +11,10 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *          normalizationContext={"groups" = {"partenaire:read"}},
+ *          denormalizationContext={"groups" = {"partenaire:write"}},   
+ *          )
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
  */
 class Partenaire
@@ -25,33 +28,38 @@ class Partenaire
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      *
      */
     private $ninea;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      */
     private $rc;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire", orphanRemoval=true)
+     * @Groups({"partenaire:read","partenaire:write"})
      */
     private $comptes;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="partenaire", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     * @ApiSubresource()
-     */
-    private $user;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire")
+     * @ApiSubresource()
+     * 
+     */
+    private $users;
     
 
     public function __construct()
     {
         $this->comptes = new ArrayCollection();
+        $this->users = new ArrayCollection();
+       
     }
 
     public function getId(): ?int
@@ -114,15 +122,36 @@ class Partenaire
         return $this;
     }
 
-    public function getUser(): ?User
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
     {
-        return $this->user;
+        return $this->users;
     }
 
-    public function setUser(User $user): self
+    public function addUser(User $user): self
     {
-        $this->user = $user;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setPartenaire($this);
+        }
 
         return $this;
     }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getPartenaire() === $this) {
+                $user->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }
