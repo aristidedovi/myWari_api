@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -24,11 +25,13 @@ class Partenaire
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     *
      */
     private $ninea;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      */
     private $rc;
 

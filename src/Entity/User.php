@@ -114,7 +114,7 @@ class User implements AdvancedUserInterface
         return $this->isActive;
     }
 
-    public function __construct($username)
+    public function __construct($username = null)
     {
         $this->isActive = true;
         $this->username = $username;

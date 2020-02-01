@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -20,11 +21,13 @@ class Depot
 
     /**
      * @ORM\Column(type="integer")
+     * 
      */
     private $mntDeposser;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $deposser_at;
 
@@ -33,6 +36,11 @@ class Depot
      * @ORM\JoinColumn(nullable=false)
      */
     private $compte;
+
+    public function __construct()
+    {
+        $this->deposser_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {

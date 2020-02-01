@@ -2,19 +2,27 @@
 
 namespace App\Controller;
 
+use App\Entity\Compte;
+use App\Entity\Depot;
+use App\Entity\Partenaire;
+use App\Entity\Role;
 use App\Entity\User;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreationCompteController
+class CreationCompteController extends AbstractController
 {
  
     public function __construct()
     {
-        
+    
     }
    /**
     * @Route(
@@ -26,7 +34,51 @@ class CreationCompteController
     public function __invoke(Request $request)
     {
         $data = $request->getContent();
-        $json = json_decode($data,true);
+        $json = json_decode($data,false);
+
+        //$role = $this->getDoctrine()->getRepository(Role::class)->findOneBy();
+        //$role->setLibelle("ROLE_SUPER_ADMIN");
+        //$this->em->getReference("ROLE_PARTENAIRE");
+        //$user = $json->partenaire->user;
+        $em = $this->getDoctrine()->getManager();
+
+        $user = new User();
+        $user->setUsername($json->partenaire->user->username);
+        $user->setPassword($json->partenaire->user->password);
+        $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
+
+        $role = (array)$json->partenaire->user->role;
+        $repo = $this->getDoctrine()->getRepository(Role::class);
+        $role = $repo->find($role[0]);
+        $user->setRole($role);
+        $em->persist($user);
+
+
+        $partenaire = new Partenaire();
+        $partenaire->setNinea($json->partenaire->ninea);
+        $partenaire->setRc($json->partenaire->rc);
+        $partenaire->setUser($user);
+        $em->persist($partenaire);
+        
+        $compte = new Compte();
+        $compte->setNumero($json->numero);
+        $compte->setPartenaire($partenaire);
+        $compte->setSolde($json->depots->mntDeposser);
+        $em->persist($compte);
+
+        $depot = new Depot();
+        $depot->setMntDeposser($json->depots->mntDeposser);
+        $depot->setCompte($compte);
+        $em->persist($depot);
+
+        $em->flush();
+
+       
+
+        //$em = $this->getDoctrine()->getManager();
+        
+        //$em->persist($user);
+        //$em->flush();
 
         //$user = new User($json["user"]['username']);
         
@@ -36,7 +88,11 @@ class CreationCompteController
         //$response = new Response($json["user"]);
         //$response->headers->set('Content-Type', 'application/json');
         //die($data);
-        print_r($json["partenaire"][0]["rc"],'\n');
+        //dd($user);
+       // var_dump($user);
+        //die();
+        //print_r($role);
+        //print_r($user);
         return  new JsonResponse($json);   
     }
 }

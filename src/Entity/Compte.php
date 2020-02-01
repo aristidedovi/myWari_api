@@ -7,18 +7,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ApiResource(
- *              collectionOperations={
+ * collectionOperations={
  *                  "get",
- *                  "post_compte"={
- *                      "route_name"="creation_compte"
- *                  }
- *              },
+ *                  "post"={"route_name"="creation_compte", "method"="post"}
+ *          },
  *              itemOperations={
- *                  "get",
+ *                  "get"
  *              }
+ *         
+ *          
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
  * 
@@ -34,11 +36,13 @@ class Compte
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
     private $numero;
 
     /**
      * @ORM\Column(type="float")
+     * 
      */
     private $solde;
 
@@ -63,6 +67,9 @@ class Compte
     public function __construct()
     {
         $this->depots = new ArrayCollection();
+        $this->create_at = new \DateTime();
+        $this->solde = 0;
+
     }
 
     public function getId(): ?int
