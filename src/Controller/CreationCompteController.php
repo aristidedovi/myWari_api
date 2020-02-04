@@ -17,12 +17,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class CreationCompteController extends AbstractController
 {
+   private $userPasswordEncoder;
  
-    public function __construct()
+    public function __construct(UserPasswordEncoderInterface $userPasswordEncoder)
     {
+      $this->userPasswordEncoder = $userPasswordEncoder;
     
     }
    /**
@@ -45,7 +48,7 @@ class CreationCompteController extends AbstractController
 
         $user = new User();
         $user->setUsername($json->partenaire->user->username);
-        $user->setPassword($json->partenaire->user->password);
+        $user->setPassword($this->userPasswordEncoder->encodePassword($user,$json->partenaire->user->password));
         $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
 
         $role = (array)$json->partenaire->user->role;

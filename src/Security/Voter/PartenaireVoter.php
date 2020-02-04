@@ -4,10 +4,11 @@ namespace App\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
 
-class UserVoter extends Voter
+
+class PartenaireVoter extends Voter
 {
     private $security;
 
@@ -21,8 +22,8 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['EDIT', 'VIEW'])
-            && $subject instanceof \App\Entity\User;
+        return in_array($attribute, ['PARTENAIRE_EDIT', 'PARTENAIRE_VIEW'])
+            && $subject instanceof \App\Entity\Partenaire;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -35,28 +36,17 @@ class UserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case 'EDIT':
+            case 'PARTENAIRE_EDIT':
                 // logic to determine if the user can EDIT
                 // return true or false
-                if($subject === $user && $this->security->isGranted('ROLE_ADMIN')){
-                    return true;
-                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                    # code...
-                }
                 break;
-            case 'VIEW':
+            case 'PARTENAIRE_VIEW':
                 // logic to determine if the user can VIEW
                 // return true or false
-                if(($subject === $user && $this->security->isGranted('ROLE_CAISSIER')) || $subject->getRoles() === ['ROLE_ADMIN_PARTENAIRE'] ){
+                if (($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_PARTENAIRE'))){
                     return true;
-                }elseif (($subject === $user  && $this->security->isGranted('ROLE_ADMIN')) || $subject->getRoles() === ['ROLE_CAISSIER']) {
+                }elseif ($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
                     return true;
-                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                    return true;
-                }elseif($subject === $user){
-                    return true;
-                }elseif ($subject->getRoles() != $user->getRoles() ) {
-                    return false;
                 }
                 break;
         }
