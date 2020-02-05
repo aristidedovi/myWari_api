@@ -60,15 +60,22 @@ class Partenaire
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire")
      * @ApiSubresource()
-     * 
+     * @Groups({"partenaire:read","partenaire:write"})
      */
     private $users;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"partenaire:read","partenaire:write"})
+     */
+    private $isActive;
     
 
     public function __construct()
     {
         $this->comptes = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->is_active = true;
        
     }
 
@@ -159,6 +166,18 @@ class Partenaire
                 $user->setPartenaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -42,13 +44,13 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user_listing:read","user_listing:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"user_listing:read","user_listing:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      */
     private $roles = [];
 
@@ -80,7 +82,7 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user_listing:read","user_listing:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      */
     private $role;
 
@@ -90,6 +92,11 @@ class User implements AdvancedUserInterface
      * @Groups({"user_listing:read","user_listing:write", "partenaire:read"})
      */
     private $partenaire;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affectations", mappedBy="user", orphanRemoval=true)
+     */
+    private $affectations;
 
     //private $encoder;
 
@@ -119,6 +126,7 @@ class User implements AdvancedUserInterface
         $this->isActive = true;
         $this->username = $username;
         $this->createdAt = new \DateTime();
+        $this->affectations = new ArrayCollection();
         //$this->encoder = $encoder;
     }
 
@@ -254,6 +262,37 @@ class User implements AdvancedUserInterface
     public function setPartenaire(?Partenaire $partenaire): self
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Affectations[]
+     */
+    public function getAffectations(): Collection
+    {
+        return $this->affectations;
+    }
+
+    public function addAffectation(Affectations $affectation): self
+    {
+        if (!$this->affectations->contains($affectation)) {
+            $this->affectations[] = $affectation;
+            $affectation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffectation(Affectations $affectation): self
+    {
+        if ($this->affectations->contains($affectation)) {
+            $this->affectations->removeElement($affectation);
+            // set the owning side to null (unless already changed)
+            if ($affectation->getUser() === $this) {
+                $affectation->setUser(null);
+            }
+        }
 
         return $this;
     }

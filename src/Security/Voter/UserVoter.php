@@ -47,16 +47,16 @@ class UserVoter extends Voter
             case 'VIEW':
                 // logic to determine if the user can VIEW
                 // return true or false
-                if(($subject === $user && $this->security->isGranted('ROLE_CAISSIER')) || $subject->getRoles() === ['ROLE_ADMIN_PARTENAIRE'] ){
+                if($subject === $user && $this->security->isGranted('ROLE_CAISSIER')){
                     return true;
-                }elseif (($subject === $user  && $this->security->isGranted('ROLE_ADMIN')) || $subject->getRoles() === ['ROLE_CAISSIER']) {
+                }elseif ($subject === $user  && $this->security->isGranted('ROLE_ADMIN')) {
                     return true;
                 }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                     return true;
                 }elseif($subject === $user){
                     return true;
-                }elseif ($subject->getRoles() != $user->getRoles() ) {
-                    return false;
+                }elseif ($subject->getPartenaire() === $user->getPartenaire() && $this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
+                    return true;
                 }
                 break;
         }

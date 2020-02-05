@@ -17,7 +17,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                  "post"={"route_name"="creation_compte", "method"="post"}
  *          },
  *              itemOperations={
- *                  "get"
+ *                "get"= {"access_control"= "is_granted('COMPTE_VIEW', object)"} ,
+ *                "put"= {"access_control"= "is_granted('COMPTE_EDIT', object)"},
+ *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN')"}
  *              },
  *          normalizationContext={"groups" = {"compte:read"}},
  *          denormalizationContext={"groups" = {"compte:write"}}
@@ -69,11 +71,17 @@ class Compte
      */
     private $depots;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affectations", mappedBy="compte", orphanRemoval=true)
+     */
+    private $affectations;
+
     public function __construct()
     {
         $this->depots = new ArrayCollection();
         $this->create_at = new \DateTime();
         $this->solde = 0;
+        $this->affectations = new ArrayCollection();
 
     }
 
@@ -155,6 +163,37 @@ class Compte
             // set the owning side to null (unless already changed)
             if ($depot->getCompte() === $this) {
                 $depot->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Affectations[]
+     */
+    public function getAffectations(): Collection
+    {
+        return $this->affectations;
+    }
+
+    public function addAffectation(Affectations $affectation): self
+    {
+        if (!$this->affectations->contains($affectation)) {
+            $this->affectations[] = $affectation;
+            $affectation->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffectation(Affectations $affectation): self
+    {
+        if ($this->affectations->contains($affectation)) {
+            $this->affectations->removeElement($affectation);
+            // set the owning side to null (unless already changed)
+            if ($affectation->getCompte() === $this) {
+                $affectation->setCompte(null);
             }
         }
 
