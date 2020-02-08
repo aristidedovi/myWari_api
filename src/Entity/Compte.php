@@ -13,8 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  * collectionOperations={
- *                  "get",
- *                  "post"={"route_name"="creation_compte", "method"="post"}
+ *                  "get"= {"access_control"= "is_granted('ROLE_ADMIN')"} ,
+ *                  "post"={"route_name"="creation_compte", "method"="post", "read"=true}
  *          },
  *              itemOperations={
  *                "get"= {"access_control"= "is_granted('COMPTE_VIEW', object)"} ,

@@ -40,49 +40,98 @@ class CreationCompteController extends AbstractController
         $data = $request->getContent();
         $json = json_decode($data,false);
 
+        
+
         //$role = $this->getDoctrine()->getRepository(Role::class)->findOneBy();
         //$role->setLibelle("ROLE_SUPER_ADMIN");
         //$this->em->getReference("ROLE_PARTENAIRE");
         //$user = $json->partenaire->user;
         $em = $this->getDoctrine()->getManager();
 
-        $user = new User();
-        $user->setUsername($json->partenaire->user->username);
-        $user->setPassword($this->userPasswordEncoder->encodePassword($user,$json->partenaire->user->password));
-        $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
+        if(intval($json->partenaire)){
 
-        $role = (array)$json->partenaire->user->role;
-        $repo = $this->getDoctrine()->getRepository(Role::class);
-        $role = $repo->find($role[0]);
-        $user->setRole($role);
-      //  $em->persist($user);
+          $compte = new Compte();
+  
+          $numero = new CompteNumero();
+          $repo = $this->getDoctrine()->getRepository(Compte::class);
+          $resultat = $repo->findOneBy([], ['id' => 'desc']);
 
+          $partenaireRepo = $this->getDoctrine()->getRepository(Partenaire::class);
+          $partenaire = $partenaireRepo->find(intval($json->partenaire));
+          $user = new User();
+          foreach ($partenaire->getUsers() as $value) {
+            if($value->getRole() === 'ROLE_PARTENAIRE'){
+              $user = $value;
+            }
+          }
+  
+          $numero = $numero->getCompteNumero($user->getUsername(), $resultat->getId());
+          $compte->setNumero($numero);
+          $compte->setPartenaire($partenaire);
+          $compte->setSolde($json->depots->mntDeposser);
+          $em->persist($compte);
+  
+          $depot = new Depot();
+          $depot->setMntDeposser($json->depots->mntDeposser);
+          $depot->setCompte($compte);
+          $em->persist($depot);
 
-        $partenaire = new Partenaire();
-        $partenaire->setNinea($json->partenaire->ninea);
-        $partenaire->setRc($json->partenaire->rc);
-        $partenaire->addUser($user);
-      //  $em->persist($partenaire);
-        
-        $compte = new Compte();
+          $em->flush();
+         // print_r($compte);
+         // die();
+          $response = new Response();
+          $response->setContent($data);
+          $response->headers->set('Content-Type', 'application/json');
+  
+          return new JsonResponse($json); 
+          
+        }else{
+          $user = new User();
+          $user->setUsername($json->partenaire->user->username);
+          $user->setPassword($this->userPasswordEncoder->encodePassword($user,$json->partenaire->user->password));
+          $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
+  
+          $role = (array)$json->partenaire->user->role;
+          $repo = $this->getDoctrine()->getRepository(Role::class);
+          $role = $repo->find($role[0]);
+          $user->setRole($role);
+          $em->persist($user);
+  
+  
+          $partenaire = new Partenaire();
+          $partenaire->setNinea($json->partenaire->ninea);
+          $partenaire->setRc($json->partenaire->rc);
+          $partenaire->addUser($user);
+          $em->persist($partenaire);
+          
+          $compte = new Compte();
+  
+          $numero = new CompteNumero();
+          $repo = $this->getDoctrine()->getRepository(Compte::class);
+          $resultat = $repo->findOneBy([], ['id' => 'desc']);
+  
+          $numero = $numero->getCompteNumero($user->getUsername(), $resultat->getId());
+          $compte->setNumero($numero);
+          $compte->setPartenaire($partenaire);
+          $compte->setSolde($json->depots->mntDeposser);
+          $em->persist($compte);
+  
+          $depot = new Depot();
+          $depot->setMntDeposser($json->depots->mntDeposser);
+          $depot->setCompte($compte);
+          $em->persist($depot);
+  
+          $em->flush();
 
-        $numero = new CompteNumero();
-        $repo = $this->getDoctrine()->getRepository(Compte::class);
-        $resultat = $repo->findOneBy([], ['id' => 'desc']);
+         $response = new Response();
+         $response->setContent($data);
+         $response->headers->set('Content-Type', 'application/json');
+ 
+         return new JsonResponse($json); 
+  
+        }
 
-        $numero = $numero->getCompteNumero($user->getUsername(), $resultat->getId());
-        $compte->setNumero($numero);
-        $compte->setPartenaire($partenaire);
-        $compte->setSolde($json->depots->mntDeposser);
-       // $em->persist($compte);
-
-        $depot = new Depot();
-        $depot->setMntDeposser($json->depots->mntDeposser);
-        $depot->setCompte($compte);
-       // $em->persist($depot);
-
-       // $em->flush();
-
+       
        
 
         //$em = $this->getDoctrine()->getManager();
@@ -104,10 +153,6 @@ class CreationCompteController extends AbstractController
         //print_r($role);
         //print_r($user);
         //$compte = (array)$compte;
-        $response = new Response();
-        $response->setContent($data);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return new JsonResponse($json);   
+  
     }
 }

@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *            
  *          collectionOperations={
  *              "get"={"access_control"= "is_granted('ROLE_ADMIN')"} ,
- *              "post"={"access_control"= "is_granted('ROLE_ADMIN')"} 
+ *              "post"={"access_control"= "is_granted('ROLE_ADMIN') || is_granted('ROLE_PARTENAIRE') "} 
  *           },
  *           itemOperations={
  *              "get"= {"access_control"= "is_granted('VIEW', object)"} ,

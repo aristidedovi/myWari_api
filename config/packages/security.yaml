@@ -64,3 +64,4 @@ security:
          - { path: ^/creationuser, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: '^/api/creation_compte', roles: [ROLE_ADMIN] }
