@@ -65,7 +65,7 @@ class CreationCompteController extends AbstractController
             }
           }
   
-          $numero = $numero->getCompteNumero($user->getUsername(), $resultat->getId());
+          $numero = $numero->getCompteNumero();
           $compte->setNumero($numero);
           $compte->setPartenaire($partenaire);
           $compte->setSolde($json->depots->mntDeposser);
@@ -84,7 +84,7 @@ class CreationCompteController extends AbstractController
           $response->headers->set('Content-Type', 'application/json');
   
           return new JsonResponse($json); 
-          
+
         }else{
           $user = new User();
           $user->setUsername($json->partenaire->user->username);
@@ -110,7 +110,7 @@ class CreationCompteController extends AbstractController
           $repo = $this->getDoctrine()->getRepository(Compte::class);
           $resultat = $repo->findOneBy([], ['id' => 'desc']);
   
-          $numero = $numero->getCompteNumero($user->getUsername(), $resultat->getId());
+          $numero = $numero->getCompteNumero();
           $compte->setNumero($numero);
           $compte->setPartenaire($partenaire);
           $compte->setSolde($json->depots->mntDeposser);

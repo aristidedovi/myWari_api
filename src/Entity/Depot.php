@@ -5,9 +5,23 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *                  "get"= {"access_control"= "is_granted('ROLE_CAISSIER')"} ,
+ *                  "post"={"access_control"= "is_granted('ROLE_CAISSIER')"}
+ *          },
+ *              itemOperations={
+ *                "get"= {"access_control"= "is_granted('ROLE_CAISIIER')"} ,
+ *                "put"= {"access_control"= "is_granted('ROLE_CAISSIER')"},
+ *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN')"}
+ *              },
+ *          normalizationContext={"groups" = {"depot:read"}},
+ *          denormalizationContext={"groups" = {"depot:write"}}
+ *          
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\DepotRepository")
  */
 class Depot
@@ -21,19 +35,21 @@ class Depot
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"partenaire:read","partenaire:write"})
+     * @Groups({"partenaire:read","partenaire:write","depot:read","depot:write"})
      */
     private $mntDeposser;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"partenaire:read","partenaire:write"})
+     * @Groups({"partenaire:read","partenaire:write","depot:read","depot:write"})
      */
     private $deposserAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
      * @ORM\JoinColumn(nullable=false)
+     *  @ApiSubresource()
+     * @Groups({"depot:read","depot:write"})
      */
     private $compte;
 

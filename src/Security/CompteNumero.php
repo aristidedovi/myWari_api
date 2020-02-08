@@ -10,12 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
 class CompteNumero 
 {
 
-    public function getCompteNumero($usernamePartenaire, $idCompte)
+    public function getCompteNumero()
     {
-        $code = substr($usernamePartenaire,0,2);
-        $code .= $idCompte;
+       // $date = "08/02/2020 00:00";
+       // $code = date_create_from_format('d/m/Y H:i', $date)->getTimestamp();
 
-        return $code;
+        return time();
     }
    
 }

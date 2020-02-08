@@ -38,14 +38,14 @@ class Compte
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write","depot:read","depot:write"})
      * 
      */
     private $numero;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write","depot:read","depot:write"})
      * 
      */
     private $solde;
