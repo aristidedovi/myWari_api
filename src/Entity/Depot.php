@@ -14,8 +14,8 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *                  "post"={"access_control"= "is_granted('ROLE_CAISSIER')"}
  *          },
  *              itemOperations={
- *                "get"= {"access_control"= "is_granted('ROLE_CAISIIER')"} ,
- *                "put"= {"access_control"= "is_granted('ROLE_CAISSIER')"},
+ *                "get"= {"access_control"= "is_granted('DEPOT_VIEW', object)"} ,
+ *                "put"= {"access_control"= "is_granted('DEPOT_EDIT', object)"},
  *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN')"}
  *              },
  *          normalizationContext={"groups" = {"depot:read"}},

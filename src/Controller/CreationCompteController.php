@@ -105,10 +105,10 @@ class CreationCompteController extends AbstractController
           $em->persist($partenaire);
           
           $compte = new Compte();
-  
           $numero = new CompteNumero();
-          $repo = $this->getDoctrine()->getRepository(Compte::class);
-          $resultat = $repo->findOneBy([], ['id' => 'desc']);
+
+          //$repo = $this->getDoctrine()->getRepository(Compte::class);
+          //$resultat = $repo->findOneBy([], ['id' => 'desc']);
   
           $numero = $numero->getCompteNumero();
           $compte->setNumero($numero);
