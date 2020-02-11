@@ -49,7 +49,7 @@ class AppFixtures extends Fixture
 
 
         $user = new User("Super Admin");
-        $user->setPassword("superadmin");
+        $user->setPassword($this->encoder->encodePassword($user,"superadmin"));
         $user->setRoles(array("ROLE_SUPER_ADMIN")); /*45054424394318*/
         $user->setRole($this->getReference("ROLE_SUPER_ADMIN"));
         $manager->persist($user);

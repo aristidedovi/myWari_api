@@ -13,17 +13,18 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *            
  *          collectionOperations={
  *              "get"={"access_control"= "is_granted('ROLE_ADMIN')"} ,
- *              "post"={"access_control"= "is_granted('ROLE_ADMIN') || is_granted('ROLE_PARTENAIRE') "} 
+ *              "post"={"access_control"= "is_granted('POST_USER', object)"} 
  *           },
  *           itemOperations={
- *              "get"= {"access_control"= "is_granted('VIEW', object)"} ,
- *              "put"= {"access_control"= "is_granted('EDIT', object)"},
+ *              "get"= {"access_control"= "is_granted('VIEW_USER', object)"} ,
+ *              "put"= {"access_control"= "is_granted('EDIT_USER', object)"},
  *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN')"} 
  *                
  *           },
@@ -45,25 +46,28 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     * @Assert\NotBlank
      */
     private $username;
 
     /**
      * @ORM\Column(type="json")
      * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     * @Assert\NotBlank
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     *
+     * 
      */
     private $password;
 
     /**
      * @SerializedName("password")
      * @Groups({"user_listing:write"})
+     * @Assert\NotBlank
      */
     private $plainPassword;
 
@@ -83,6 +87,7 @@ class User implements AdvancedUserInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     * @Assert\NotBlank
      */
     private $role;
 

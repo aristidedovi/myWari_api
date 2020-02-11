@@ -21,7 +21,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['EDIT', 'VIEW'])
+        return in_array($attribute, ['EDIT_USER', 'VIEW_USER','POST_USER'])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -33,9 +33,10 @@ class UserVoter extends Voter
             return false;
         }
 
+        
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case 'EDIT':
+            case 'EDIT_USER':
                 // logic to determine if the user can EDIT
                 // return true or false
                 if($subject === $user && $this->security->isGranted('ROLE_ADMIN')){
@@ -44,7 +45,7 @@ class UserVoter extends Voter
                     # code...
                 }
                 break;
-            case 'VIEW':
+            case 'VIEW_USER':
                 // logic to determine if the user can VIEW
                 // return true or false
                 if($this->security->isGranted('ROLE_CAISSIER')){
@@ -65,6 +66,16 @@ class UserVoter extends Voter
                     }
                 }
                 break;
+            case 'POST_USER':
+                if ($this->security->isGranted('ROLE_SUPER_ADMIN')){
+                    return true;
+                }elseif ($this->security->isGranted('ROLE_ADMIN')) {
+                    if($subject->getRole() === $user->getRole()){
+                        return true;
+                    }
+                }
+                
+            break;
         }
 
         return false;
