@@ -28,6 +28,7 @@ security:
             stateless: true
             anonymous: true
             provider: entity_provider
+            user_checker: App\Security\UserChecker
             json_login:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
