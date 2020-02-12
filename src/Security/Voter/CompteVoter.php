@@ -55,11 +55,12 @@ class CompteVoter extends Voter
                    }
                 
                }elseif ($this->security->isGranted('ROLE_USER_PARTENAIRE') && $subject->getPartenaire() === $user->getPartenaire()) {
-                    if($subject->getAffectations()[count($subject->getAffectations()) - 1]->getUser() === $user && 
-                        $subject->getAffectations()[count($subject->getAffectations()) - 1]->getAffecterEndAt() > $date){
+                   // if($subject->getAffectations()[count($subject->getAffectations()) - 1]->getUser() === $user && 
+                   //     $subject->getAffectations()[count($subject->getAffectations()) - 1]->getAffecterEndAt() > $date){
                         // echo($subject->getAffectations()[count($subject->getAffectations()) - 1]->getAffecterEndAt()->format('Y-m-d H:i:s')." ". $date->format('Y-m-d H:i:s'));
-                        return true;
-                    }
+                       
+                   // }
+                    return true;
                }
                 
                 break;

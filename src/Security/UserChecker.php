@@ -25,7 +25,7 @@ class UserChecker implements UserCheckerInterface
         }*/
 
         if(!$user->getIsActive()){
-            throw new DisabledException("Compte désactivé");
+            throw new DisabledException('....');
         }elseif (!$user->getPartenaire()->getIsActive()) {
             throw new DisabledException('....');
         }

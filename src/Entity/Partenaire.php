@@ -75,7 +75,7 @@ class Partenaire
     {
         $this->comptes = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->is_active = true;
+        $this->isActive = true;
        
     }
 

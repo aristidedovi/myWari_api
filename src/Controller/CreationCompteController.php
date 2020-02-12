@@ -48,16 +48,16 @@ class CreationCompteController extends AbstractController
         //$user = $json->partenaire->user;
         $em = $this->getDoctrine()->getManager();
 
-        if(intval($json->partenaire)){
+        if(isset($json->partenaire_id)){
 
           $compte = new Compte();
   
           $numero = new CompteNumero();
-          $repo = $this->getDoctrine()->getRepository(Compte::class);
-          $resultat = $repo->findOneBy([], ['id' => 'desc']);
+          //$repo = $this->getDoctrine()->getRepository(Compte::class);
+         // $resultat = $repo->findOneBy([], ['id' => 'desc']);
 
           $partenaireRepo = $this->getDoctrine()->getRepository(Partenaire::class);
-          $partenaire = $partenaireRepo->find(intval($json->partenaire));
+          $partenaire = $partenaireRepo->find(intval($json->partenaire_id));
           $user = new User();
           foreach ($partenaire->getUsers() as $value) {
             if($value->getRole() === 'ROLE_PARTENAIRE'){
@@ -68,7 +68,7 @@ class CreationCompteController extends AbstractController
           $numero = $numero->getCompteNumero();
           $compte->setNumero($numero);
           $compte->setPartenaire($partenaire);
-          $compte->setSolde($json->depots->mntDeposser);
+          $compte->setSolde($json->solde);
           $em->persist($compte);
   
           $depot = new Depot();
@@ -76,14 +76,20 @@ class CreationCompteController extends AbstractController
           $depot->setCompte($compte);
           $em->persist($depot);
 
-          $em->flush();
+         // $em->flush();
          // print_r($compte);
          // die();
-          $response = new Response();
-          $response->setContent($data);
-          $response->headers->set('Content-Type', 'application/json');
-  
-          return new JsonResponse($json); 
+         $return = [
+          "code"=>"201",
+          "content"=>"Creation de compte su partenaire reussi"
+        ];
+
+         $response = new JsonResponse();
+         $response->setContent(json_encode($return));
+         $response->headers->set('Content-Type', 'application/json');
+         $response->setStatusCode(JsonResponse::HTTP_CREATED);
+ 
+         return $response; 
 
         }else{
           $user = new User();
@@ -91,9 +97,9 @@ class CreationCompteController extends AbstractController
           $user->setPassword($this->userPasswordEncoder->encodePassword($user,$json->partenaire->user->password));
           $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
   
-          $role = (array)$json->partenaire->user->role;
+          $role = $json->partenaire->user->role_id;
           $repo = $this->getDoctrine()->getRepository(Role::class);
-          $role = $repo->find($role[0]);
+          $role = $repo->find($role);
           $user->setRole($role);
           $em->persist($user);
   
@@ -107,27 +113,35 @@ class CreationCompteController extends AbstractController
           $compte = new Compte();
           $numero = new CompteNumero();
 
-          //$repo = $this->getDoctrine()->getRepository(Compte::class);
-          //$resultat = $repo->findOneBy([], ['id' => 'desc']);
+         // $repo = $this->getDoctrine()->getRepository(Compte::class);
+         // $resultat = $repo->findOneBy([], ['id' => 'desc']);
   
           $numero = $numero->getCompteNumero();
           $compte->setNumero($numero);
           $compte->setPartenaire($partenaire);
-          $compte->setSolde($json->depots->mntDeposser);
+          $compte->setSolde($json->solde);
           $em->persist($compte);
   
           $depot = new Depot();
           $depot->setMntDeposser($json->depots->mntDeposser);
           $depot->setCompte($compte);
           $em->persist($depot);
+
+         // dd($compte);
   
           $em->flush();
 
-         $response = new Response();
-         $response->setContent($data);
+        $return = [
+          "code"=>"201",
+          "content"=>"Creation de compte su partenaire reussi"
+        ];
+
+         $response = new JsonResponse();
+         $response->setContent(json_encode($return));
          $response->headers->set('Content-Type', 'application/json');
+         $response->setStatusCode(JsonResponse::HTTP_CREATED);
  
-         return new JsonResponse($json); 
+         return $response; 
   
         }
 
