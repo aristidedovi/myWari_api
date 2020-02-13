@@ -58,12 +58,16 @@ class UserVoter extends Voter
                     }
                 }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                     return true;
-                }elseif($this->security->isGranted('ROLE_PARTENAIRE') || $this->security->isGranted('ROLE_ADMIN_PARTENAIRE') || $this->security->isGranted('ROLE_USER_PARTENAIRE')){
-                    if ($subject === $user && $subject->getPartenaire()->getIsActive() === true) {
+                }elseif($this->security->isGranted('ROLE_PARTENAIRE')){
+                    return true;
+                }elseif ($this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
+                    if(($subject === $user && $subject->getPartenaire()->getIsActive() === true)){
                         return true;
-                    }elseif ($subject->getPartenaire() === $user->getPartenaire()) {
+                    }elseif($subject->getRoles() === ["ROLE_USER_PARTENAIRE"]){
                         return true;
                     }
+                }elseif ($subject->getPartenaire() === $user->getPartenaire()) {
+                    return true;
                 }
                 break;
             case 'POST_USER':
@@ -75,7 +79,7 @@ class UserVoter extends Voter
                     }
                 }
                 
-            break;
+                break;
         }
 
         return false;

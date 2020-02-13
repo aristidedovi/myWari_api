@@ -26,7 +26,7 @@ class UserChecker implements UserCheckerInterface
 
         if(!$user->getIsActive()){
             throw new DisabledException('....');
-        }elseif (!$user->getPartenaire()->getIsActive()) {
+        }elseif ( $user->getPartenaire() != null && !$user->getPartenaire()->getIsActive()) {
             throw new DisabledException('....');
         }
     }
@@ -42,8 +42,11 @@ class UserChecker implements UserCheckerInterface
             throw new AccountExpiredException('...');
         }*/
         $date = new DateTime("now");
-        if($user->getAffectations()[count($user->getAffectations()) - 1]->getAffecterEndAt() < $date){
-            throw new AccountExpiredException('...');
+        if($user->getRole()->getLibelle() === 'ROLE_USER_PARTENAIRE'){
+            if($user->getAffectations()[count($user->getAffectations()) - 1]->getAffecterEndAt() < $date){
+                throw new AccountExpiredException('...');
+            }
         }
+
     }
 }
