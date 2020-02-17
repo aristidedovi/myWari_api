@@ -13,13 +13,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *          collectionOperations={
- *              "get"={"access_control"= "is_granted('ROLE_ADMIN')"} ,
- *              "post"={"access_control"= "is_granted('ROLE_ADMIN')"} 
+ *              
  *           },
  *           itemOperations={
- *              "get"= {"access_control"= "is_granted('PARTENAIRE_VIEW', object)"} ,
- *              "put"= {"access_control"= "is_granted('PARTENAIRE_EDIT', object)"},
- *              "delete"= {"access_control"= "is_granted('ROLE_ADMIN')"} 
+ *              
  *                
  *           },
  *          normalizationContext={"groups" = {"partenaire:read"}},
