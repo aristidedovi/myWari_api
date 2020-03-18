@@ -4,18 +4,18 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
   *          collectionOperations={
  *              "get"={"access_control"= "is_granted('ROLE_PARTENAIRE')"} ,
- *              "post"={"access_control"= "is_granted('ROLE_PARTENAIRE')"} 
+ *              "post"={"access_control"= "is_granted('ROLE_PARTENAIRE') or is_granted('ROLE_ADMIN_PARTENAIRE')"}
  *           },
  *           itemOperations={
  *              "get"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"} ,
  *              "put"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"},
- *              "delete"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"} 
- *
+ *              "delete"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"}
  *           },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\AffectationsRepository")
@@ -31,23 +31,27 @@ class Affectations
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $affecterStartAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $affecterEndAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affectations")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="affectations")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $compte;
 

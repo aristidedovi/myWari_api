@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class GetByUsernameController extends AbstractController
 {
 
-       /**
+    /**
     * @Route(
     *    name="getUserByUsername",
     *    path="api/users/username/{username}",
@@ -26,7 +26,16 @@ class GetByUsernameController extends AbstractController
             'username' => $username
         ]);
         if (!$user) {
-            throw new NotFoundHttpException('User not found');
+          $return = [
+               "code"=>"404",
+               "content"=>"User not found"
+             ];
+             $response = new JsonResponse();
+             $response->setContent(json_encode($return));
+             $response->headers->set('Content-Type', 'application/json');
+             $response->setStatusCode(JsonResponse::HTTP_NOT_FOUND);
+
+             return $response;
         }
        // return $user;
        // dd($user);
@@ -39,8 +48,8 @@ class GetByUsernameController extends AbstractController
           $user = $this->get('serializer')->serialize($user, 'json');
 
           $response = new Response($user);
-      
           $response->headers->set('Content-Type', 'application/json');
+
           return $response;
      }
 }

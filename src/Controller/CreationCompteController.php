@@ -63,6 +63,10 @@ class CreationCompteController extends AbstractController
           $repo = $this->getDoctrine()->getRepository(Role::class);
           $role = $repo->find($role);
           $user->setRole($role);
+          $user->setFirstname($json->partenaire->user->firstname);
+          $user->setLastname($json->partenaire->user->lastname);
+          $user->setEmail($json->partenaire->user->email);
+          $user->setTelephone($json->partenaire->user->telephone);
           $em->persist($user);
 
           $partenaire = new Partenaire();
@@ -149,7 +153,7 @@ class CreationCompteController extends AbstractController
     */
     public function __invoke(Request $request)
     {
-      if (!$this->isGranted('ROLE_ADMIN')) {
+      if (!$this->isGranted('ROLE_ADMIN_SYSTEME')) {
         $return = [
             "code"=>"403",
             "content"=>"Access refuser"

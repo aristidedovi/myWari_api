@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *          collectionOperations={
- *              "get"={"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"} ,
+ *              "get",
  *              "post"={"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"}
  *           },
  *           itemOperations={

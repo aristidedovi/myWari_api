@@ -48,7 +48,7 @@ class AppFixtures extends Fixture
         $this->addReference("ROLE_SUPER_ADMIN_SYSTEME", $role);
 
 
-        $user = new User("super admin");
+        $user = new User("superadmin");
         $user->setFirstname("Super");
         $user->setLastname("Admin");
         $user->setEmail("superadmin@gmail.com");

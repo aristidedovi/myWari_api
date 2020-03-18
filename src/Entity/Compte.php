@@ -13,13 +13,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  * collectionOperations={
- *                  "get"= {"access_control"= "is_granted('ROLE_ADMIN')"} ,
+ *                  "get",
  *                  "post"={"route_name"="creation_compte", "method"="post","read"=true}
  *          },
  *              itemOperations={
  *                "get"= {"access_control"= "is_granted('COMPTE_VIEW', object)"} ,
  *                "put"= {"access_control"= "is_granted('COMPTE_EDIT', object)"},
- *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN')"}
+ *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"}
  *              },
  *          normalizationContext={"groups" = {"compte:read"}},
  *          denormalizationContext={"groups" = {"compte:write"}}

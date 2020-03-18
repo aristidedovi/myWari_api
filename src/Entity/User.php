@@ -27,7 +27,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
  *           itemOperations={
  *              "get"= {"access_control"= "is_granted('VIEW_USER', object)"},
  *              "put"= {"access_control"= "is_granted('EDIT_USER', object)"},
- *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN')"},
+ *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN_SYSTEME')"},
  *              "getByUsername"={"route_name"="getUserByUsername", "method"="get","read"=true}
  *           },
  *          normalizationContext={"groups" = {"user_listing:read"}},
@@ -103,6 +103,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectations", mappedBy="user", orphanRemoval=true)
+     * 
      */
     private $affectations;
 

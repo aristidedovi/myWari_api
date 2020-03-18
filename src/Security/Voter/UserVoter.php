@@ -37,20 +37,14 @@ class UserVoter extends Voter
             case 'EDIT_USER':
                 // logic to determine if the user can EDIT
                 // return true or false
-                if($this->security->isGranted('ROLE_ADMIN_SYSTEME')){
-                    if($subject->getRoles() === ["ROLE_CAISSIER_SYSTEME"] || $subject->getRoles() === ["ROLE_PARTENAIRE"]){
+                if($this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')){
+                    return true;
+                }elseif($this->security->isGranted('ROLE_ADMIN_SYSTEME')){
+                    if($subject === $user || $subject->getRoles() ===["ROLE_CAISSIER_SYSTEME"]){
                         return true;
                     }
-                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')) {
-                   if($subject->getRoles() === ["ROLE_ADMIN_SYSTEME"] || $subject->getRoles() === ["ROLE_CAISSIER_SYSTEME"] || $subject->getRoles() === ["ROLE_PARTENAIRE"]){
-                       return true;
-                   }
-                }elseif ($this->security->isGranted('ROLE_PARTENAIRE')) {
-                    if($subject->getRoles() === ["ROLE_ADMIN_PARTENAIRE"] || $subject->getRoles() === ["ROLE_USER_PARTENAIRE"]){
-                        return true;
-                    }
-                }elseif ($this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
-                    if($subject->getRoles() === ['ROLE_USER_PARTENAIRE']){
+                }elseif($this->security->isGranted('ROLE_CAISSIER_SYSTEME')){
+                    if($subject === $user){
                         return true;
                     }
                 }

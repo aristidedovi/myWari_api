@@ -29,6 +29,28 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAllSystemeUser($role)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->andWhere('u.partenaire IS NULL')
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findAllPartenaireUser($role)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->andWhere('u.partenaire IS NOT NULL')
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
