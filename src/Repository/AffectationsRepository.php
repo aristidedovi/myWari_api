@@ -19,6 +19,22 @@ class AffectationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Affectations::class);
     }
 
+   /**
+     * @return Affectations[] Returns an array of Affectations objects
+    */
+    public function findCompteByUser($value)
+    {
+        $date = new \DateTime("now");
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->andWhere('a.affecterEndAt > :date')
+            ->setParameter('val', $value)
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Affectations[] Returns an array of Affectations objects
     //  */

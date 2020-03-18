@@ -3,10 +3,9 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use App\Entity\Affectations;
 use App\Entity\Compte;
-use App\Entity\Partenaire;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
 
 final class CompteGetCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
@@ -64,9 +63,17 @@ final class CompteGetCollectionDataProvider implements CollectionDataProviderInt
             $compte = $em->findAll();
 
          }elseif ($this->security->getUser()->getRoles() === ['ROLE_USER_PARTENAIRE']) {
-            $compte = $em->findBy([
-                'partenaire' => $this->security->getUser()->getPartenaire()
-            ]);
+
+            $repo = $this->entityManager->getRepository(Affectations::class);
+            $affectation =  $repo->findCompteByUser($this->security->getUser());
+
+            //dd($affectation);
+            $compte = Array();
+            foreach ($affectation as $value) {
+                $c = new Compte();
+                $c = $value->getCompte();
+                array_push($compte, $c);
+            }
          }
         return $compte;
     }
