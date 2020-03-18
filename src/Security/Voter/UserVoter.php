@@ -14,7 +14,6 @@ class UserVoter extends Voter
     public function __construct(Security $security)
     {
         $this->security = $security;
-        
     }
 
     protected function supports($attribute, $subject)
@@ -33,32 +32,50 @@ class UserVoter extends Voter
             return false;
         }
 
-        
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'EDIT_USER':
                 // logic to determine if the user can EDIT
                 // return true or false
-                if($subject === $user && $this->security->isGranted('ROLE_ADMIN')){
-                    return true;
-                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                    # code...
+                if($this->security->isGranted('ROLE_ADMIN_SYSTEME')){
+                    if($subject->getRoles() === ["ROLE_CAISSIER_SYSTEME"] || $subject->getRoles() === ["ROLE_PARTENAIRE"]){
+                        return true;
+                    }
+                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')) {
+                   if($subject->getRoles() === ["ROLE_ADMIN_SYSTEME"] || $subject->getRoles() === ["ROLE_CAISSIER_SYSTEME"] || $subject->getRoles() === ["ROLE_PARTENAIRE"]){
+                       return true;
+                   }
+                }elseif ($this->security->isGranted('ROLE_PARTENAIRE')) {
+                    if($subject->getRoles() === ["ROLE_ADMIN_PARTENAIRE"] || $subject->getRoles() === ["ROLE_USER_PARTENAIRE"]){
+                        return true;
+                    }
+                }elseif ($this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
+                    if($subject->getRoles() === ['ROLE_USER_PARTENAIRE']){
+                        return true;
+                    }
                 }
                 break;
             case 'VIEW_USER':
                 // logic to determine if the user can VIEW
                 // return true or false
-                if($this->security->isGranted('ROLE_CAISSIER')){
+                //dd( ["ROLE_CAISSIER_SYSTEME"], $user);
+                if($this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')){
+                   // dd($user);
+                    return true;
+                }
+                if($this->security->isGranted('ROLE_ADMIN_SYSTEME')){
+                    if($subject === $user || $subject->getRoles() == ["ROLE_CAISSIER_SYSTEME"] ){
+                        return true;
+                    }
+                }
+
+                if($this->security->isGranted('ROLE_CAISSIER_SYSTEME')){
                     if ($subject === $user) {
                         return true;
                     }
-                }elseif ($this->security->isGranted('ROLE_ADMIN')) {
-                    if($subject === $user){
-                        return true;
-                    }
-                }elseif ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                    return true;
-                }elseif($this->security->isGranted('ROLE_PARTENAIRE')){
+                }
+
+                if($this->security->isGranted('ROLE_PARTENAIRE')){
                     return true;
                 }elseif ($this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
                     if(($subject === $user && $subject->getPartenaire()->getIsActive() === true)){
@@ -71,14 +88,25 @@ class UserVoter extends Voter
                 }
                 break;
             case 'POST_USER':
-                if ($this->security->isGranted('ROLE_SUPER_ADMIN')){
-                    return true;
-                }elseif ($this->security->isGranted('ROLE_ADMIN')) {
-                    if($subject->getRole() === $user->getRole()){
+                // logic to determine if the user can VIEW
+                // return true or false
+                if ($this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')){
+                    if($subject->getRoles() === ['ROLE_CAISSIER_SYSTEME'] || $subject->getRoles() === ['ROLE_ADMIN_SYSTEME'] || $subject->getRoles() === ['ROLE_ADMIN_PATENAIRE'] ){
+                        return true;
+                    }
+                }elseif ($this->security->isGranted('ROLE_ADMIN_SYSTEME')) {
+                    if($subject->getRoles() === ['ROLE_CAISSIER_SYSTEME']){
+                        return true;
+                    }
+                }elseif ($this->security->isGranted(('ROLE_PARTENAIRE'))) {
+                    if($subject->getRoles() === ["ROLE_ADMIN_PARTENAIRE"] || $subject->getRoles() === ["ROLE_USER_PARTENAIRE"]  ){
+                        return true;
+                    }
+                }elseif($this->security->isGranted('ROLE_ADMIN_PARTENAIRE')){
+                    if($subject->getRoles() === ["ROLE_USER_PARTENAIRE"]){
                         return true;
                     }
                 }
-                
                 break;
         }
 

@@ -26,74 +26,107 @@ class CreationCompteController extends AbstractController
     public function __construct(UserPasswordEncoderInterface $userPasswordEncoder)
     {
       $this->userPasswordEncoder = $userPasswordEncoder;
-    
+
     }
 
     public function compteAvecNewPartenaire($json){
-      $em = $this->getDoctrine()->getManager();
-      $user = new User();
+
+ /*
+    {
+        "partenaire":
+        {
+          "ninea": "2096817",
+          "rc": "5728/1997",
+          "user":
+            {
+              "username": "partenaire01",
+              "roles": [
+                  "ROLE_PARTENAIRE"
+              ],
+              "role": "4",
+              "password":"partenaire01"
+            }
+        },
+        "depots":
+          {
+            "mntDeposser": "7000000"
+            }
+    }
+  */
+          $em = $this->getDoctrine()->getManager();
+          $user = new User();
           $user->setUsername($json->partenaire->user->username);
           $user->setPassword($this->userPasswordEncoder->encodePassword($user,$json->partenaire->user->password));
           $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
-  
-          $role = $json->partenaire->user->role_id;
+
+          $role = $json->partenaire->user->role;
           $repo = $this->getDoctrine()->getRepository(Role::class);
           $role = $repo->find($role);
           $user->setRole($role);
           $em->persist($user);
-  
-  
+
           $partenaire = new Partenaire();
           $partenaire->setNinea($json->partenaire->ninea);
           $partenaire->setRc($json->partenaire->rc);
           $partenaire->addUser($user);
           $em->persist($partenaire);
-          
+
           $compte = new Compte();
           $numero = new CompteNumero();
 
          // $repo = $this->getDoctrine()->getRepository(Compte::class);
          // $resultat = $repo->findOneBy([], ['id' => 'desc']);
-  
+
           $numero = $numero->getCompteNumero();
           $compte->setNumero($numero);
           $compte->setPartenaire($partenaire);
-          $compte->setSolde($json->solde);
           $em->persist($compte);
-  
+
           $depot = new Depot();
           $depot->setMntDeposser($json->depots->mntDeposser);
           $depot->setCompte($compte);
           $em->persist($depot);
 
-         dd($compte);
-  
+          //dd($compte);
+
           $em->flush();
 
     }
 
     public function compteSansNewPartenaire($json){
 
+  /*
+  {
+        "partenaire":
+          {
+            "ninea": "2096817"
+          },
+        "depots":
+          {
+            "mntDeposser": "7000000"
+          }
+    }
+    */
+
       $em = $this->getDoctrine()->getManager();
       $compte = new Compte();
-  
+
       $numero = new CompteNumero();
-      //$repo = $this->getDoctrine()->getRepository(Compte::class);
-     // $resultat = $repo->findOneBy([], ['id' => 'desc']);
 
       $partenaireRepo = $this->getDoctrine()->getRepository(Partenaire::class);
-      $partenaire = $partenaireRepo->find(intval($json->partenaire_id));
-      $user = new User();
-      foreach ($partenaire->getUsers() as $value) {
-        if($value->getRole() === 'ROLE_PARTENAIRE'){
-          $user = $value;
-        }
-      }
+      $partenaire = $partenaireRepo->findOneBy([
+        "ninea" => $json->partenaire->ninea
+      ]);
+     // $user = new User();
+     // foreach ($partenaire->getUsers() as $value) {
+     //   if($value->getRole() === 'ROLE_PARTENAIRE'){
+      //    $user = $value;
+      //  }
+     // }
 
       $numero = $numero->getCompteNumero();
       $compte->setNumero($numero);
       $compte->setPartenaire($partenaire);
-      $compte->setSolde($json->solde);
       $em->persist($compte);
 
       $depot = new Depot();
@@ -101,7 +134,7 @@ class CreationCompteController extends AbstractController
       $depot->setCompte($compte);
       $em->persist($depot);
 
-      dd($compte);
+      //dd($compte);
 
       $em->flush();
     }
@@ -116,10 +149,23 @@ class CreationCompteController extends AbstractController
     */
     public function __invoke(Request $request)
     {
+      if (!$this->isGranted('ROLE_ADMIN')) {
+        $return = [
+            "code"=>"403",
+            "content"=>"Access refuser"
+          ];
+          $response = new JsonResponse();
+          $response->setContent(json_encode($return));
+          $response->headers->set('Content-Type', 'application/json');
+          $response->setStatusCode(JsonResponse::HTTP_FORBIDDEN);
+
+          return $response;
+
+      }
         $data = $request->getContent();
         $json = json_decode($data,false);
 
-        if(isset($json->partenaire_id)){
+        if(isset($json->partenaire->ninea) && !isset($json->partenaire->rc)){
 
               $this->compteSansNewPartenaire($json);
               $return = [
@@ -130,8 +176,8 @@ class CreationCompteController extends AbstractController
               $response->setContent(json_encode($return));
               $response->headers->set('Content-Type', 'application/json');
               $response->setStatusCode(JsonResponse::HTTP_CREATED);
-      
-              return $response; 
+
+              return $response;
 
         }else{
 
@@ -144,10 +190,9 @@ class CreationCompteController extends AbstractController
               $response->setContent(json_encode($return));
               $response->headers->set('Content-Type', 'application/json');
               $response->setStatusCode(JsonResponse::HTTP_CREATED);
-      
-              return $response; 
-  
+
+              return $response;
         }
-  
+
     }
 }

@@ -46,7 +46,7 @@ class DepotVoter extends Voter
                     if ($subject->getCompte()->getPartenaire() === $user->getPartenaire()) {
                         return true;
                     }
-                }elseif ($this->security->isGranted('ROLE_CAISSIER')) {
+                }elseif ($this->security->isGranted('ROLE_CAISSIER_SYSTEME')) {
                     return true;
                 }
                 break;

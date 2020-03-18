@@ -14,24 +14,27 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 /**
  * @ApiResource(
- *            
+ *
  *          collectionOperations={
- *              "get"={"access_control"= "is_granted('ROLE_ADMIN')"} ,
- *              "post"={"access_control"= "is_granted('POST_USER', object)"} 
+ *              "get",
+ *              "post"={"access_control"= "is_granted('POST_USER', object)"}
  *           },
  *           itemOperations={
- *              "get"= {"access_control"= "is_granted('VIEW_USER', object)"} ,
+ *              "get"= {"access_control"= "is_granted('VIEW_USER', object)"},
  *              "put"= {"access_control"= "is_granted('EDIT_USER', object)"},
- *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN')"} 
- *                
+ *              "delete"= {"access_control"= "is_granted('ROLE_SUPER_ADMIN')"},
+ *              "getByUsername"={"route_name"="getUserByUsername", "method"="get","read"=true}
  *           },
  *          normalizationContext={"groups" = {"user_listing:read"}},
- *          denormalizationContext={"groups" = {"user_listing:write"}},         
+ *          denormalizationContext={"groups" = {"user_listing:write"}},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ApiFilter(SearchFilter::class, properties={"username": "partial"})
  * @ORM\Table(name="users")
  */
 class User implements AdvancedUserInterface
@@ -40,6 +43,7 @@ class User implements AdvancedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      */
     private $id;
 
@@ -60,20 +64,20 @@ class User implements AdvancedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * 
+     *
      */
     private $password;
 
     /**
      * @SerializedName("password")
      * @Groups({"user_listing:write"})
-     * @Assert\NotBlank
+     *
      */
     private $plainPassword;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
+     *
      */
     private $createdAt;
 
@@ -86,14 +90,13 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write","role:read","role:write"})
      * @Assert\NotBlank
      */
     private $role;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
-     * 
      * @Groups({"user_listing:read","user_listing:write", "partenaire:read"})
      */
     private $partenaire;
@@ -102,6 +105,30 @@ class User implements AdvancedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Affectations", mappedBy="user", orphanRemoval=true)
      */
     private $affectations;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     */
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     */
+    private $lastname;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     */
+    private $telephone;
 
     //private $encoder;
 
@@ -186,7 +213,6 @@ class User implements AdvancedUserInterface
 
     public function setPassword(string $password): self
     {
-        
        // $user = new User($this->encoder);
         $this->password = $password;
 
@@ -298,6 +324,54 @@ class User implements AdvancedUserInterface
                 $affectation->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(string $telephone): self
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }

@@ -6,17 +6,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  * collectionOperations={
- *                  "get"= {"access_control"= "is_granted('ROLE_CAISSIER')"} ,
- *                  "post"={"access_control"= "is_granted('ROLE_CAISSIER')"}
+ *                  "get"= {"access_control"= "is_granted('ROLE_CAISSIER_SYSTEME')"} ,
+ *                  "post"={"route_name"="depot_compte", "method"="post","read"=true}
  *          },
  *              itemOperations={
  *                "get"= {"access_control"= "is_granted('DEPOT_VIEW', object)"} ,
  *                "put"= {"access_control"= "is_granted('DEPOT_EDIT', object)"},
- *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN')"}
+ *                "delete"= {"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"}
  *              },
  *          normalizationContext={"groups" = {"depot:read"}},
  *          denormalizationContext={"groups" = {"depot:write"}}
@@ -36,12 +37,14 @@ class Depot
     /**
      * @ORM\Column(type="integer")
      * @Groups({"partenaire:read","partenaire:write","depot:read","depot:write"})
+     * @Assert\NotBlank
      */
     private $mntDeposser;
 
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"partenaire:read","partenaire:write","depot:read","depot:write"})
+     * @Assert\NotBlank
      */
     private $deposserAt;
 
@@ -50,6 +53,7 @@ class Depot
      * @ORM\JoinColumn(nullable=false)
      *  @ApiSubresource()
      * @Groups({"depot:read","depot:write"})
+     * @Assert\NotBlank
      */
     private $compte;
 

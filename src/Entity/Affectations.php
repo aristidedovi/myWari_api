@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *              "get"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"} ,
  *              "put"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"},
  *              "delete"= {"access_control"= "is_granted('ROLE_PARTENAIRE')"} 
- *                
+ *
  *           },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\AffectationsRepository")

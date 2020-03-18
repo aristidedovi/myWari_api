@@ -13,14 +13,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *          collectionOperations={
- *              
+ *              "get"={"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"} ,
+ *              "post"={"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"}
  *           },
  *           itemOperations={
- *              
- *                
+ *              "get"= {"access_control"= "is_granted('PARTENAIRE_VIEW', object)"} ,
+ *              "put"= {"access_control"= "is_granted('PARTENAIRE_EDIT', object)"},
+ *              "delete"= {"access_control"= "is_granted('ROLE_ADMIN_SYSTEME')"}
  *           },
  *          normalizationContext={"groups" = {"partenaire:read"}},
- *          denormalizationContext={"groups" = {"partenaire:write"}},   
+ *          denormalizationContext={"groups" = {"partenaire:write"}},
  *          )
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
  */
@@ -35,24 +37,22 @@ class Partenaire
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write","compte:read","compte:write"})
      *
      */
     private $ninea;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write","compte:read","compte:write"})
      */
     private $rc;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire", orphanRemoval=true)
-     * @Groups({"partenaire:read","partenaire:write"})
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
      */
     private $comptes;
-
-
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire")
@@ -66,7 +66,7 @@ class Partenaire
      * @Groups({"partenaire:read","partenaire:write"})
      */
     private $isActive;
-    
+
 
     public function __construct()
     {

@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          denormalizationContext={"groups" = {"compte:write"}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
- * 
+ *
  */
 class Compte
 {
@@ -39,20 +39,20 @@ class Compte
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write","depot:read","depot:write"})
-     * 
+     *
      */
     private $numero;
 
     /**
      * @ORM\Column(type="float")
      * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write","depot:read","depot:write"})
-     * 
+     *
      */
     private $solde;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
+     *
      */
     private $create_at;
 

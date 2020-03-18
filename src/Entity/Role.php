@@ -10,7 +10,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *  *          collectionOperations={
+ *              "get",
+ *              "post"
+ *           },
+ *           itemOperations={
+ *              "get",
+ *              "put",
+ *              "delete"
+ *           },
+ *          normalizationContext={"groups" = {"role:read"}},
+ *          denormalizationContext={"groups" = {"role:write"}},
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  */
 class Role
@@ -19,12 +31,14 @@ class Role
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"role:read","role:write","user_listing:read","user_listing:write"})
      */
     private $id;
 
     /**
      * @Groups({"user_listing:read"})
      * @ORM\Column(type="string", length=100)
+     * @Groups({"role:read","role:write","user_listing:read","user_listing:write"})
      */
     private $libelle;
 

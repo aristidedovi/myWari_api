@@ -20,15 +20,15 @@ class AppFixtures extends Fixture
     {
 
         $role = new Role();
-        $role->setLibelle("ROLE_SUPER_ADMIN");
+        $role->setLibelle("ROLE_SUPER_ADMIN_SYSTEME");
         $manager->persist($role);
 
         $role1 = new Role();
-        $role1->setLibelle("ROLE_ADMIN");
+        $role1->setLibelle("ROLE_ADMIN_SYSTEME");
         $manager->persist($role1);
 
         $role2 = new Role();
-        $role2->setLibelle("ROLE_CAISSIER");
+        $role2->setLibelle("ROLE_CAISSIER_SYSTEME");
         $manager->persist($role2);
 
         $role3 = new Role();
@@ -45,13 +45,17 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
-        $this->addReference("ROLE_SUPER_ADMIN", $role);
+        $this->addReference("ROLE_SUPER_ADMIN_SYSTEME", $role);
 
 
-        $user = new User("Super Admin");
+        $user = new User("super admin");
+        $user->setFirstname("Super");
+        $user->setLastname("Admin");
+        $user->setEmail("superadmin@gmail.com");
+        $user->setTelephone("778580286");
         $user->setPassword($this->encoder->encodePassword($user,"superadmin"));
-        $user->setRoles(array("ROLE_SUPER_ADMIN")); /*45054424394318*/
-        $user->setRole($this->getReference("ROLE_SUPER_ADMIN"));
+        $user->setRoles(array("ROLE_SUPER_ADMIN_SYSTEME")); /*45054424394318*/
+        $user->setRole($this->getReference("ROLE_SUPER_ADMIN_SYSTEME"));
         $manager->persist($user);
         // $product = new Product(); !31ArIs93DoVi08
         // $manager->persist($product);

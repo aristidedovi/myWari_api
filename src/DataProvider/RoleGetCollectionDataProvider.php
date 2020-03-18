@@ -3,12 +3,12 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Entity\User;
+use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
 
-final class UserGetCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
+final class RoleGetCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
 
     private $entityManager;
@@ -23,12 +23,12 @@ final class UserGetCollectionDataProvider implements CollectionDataProviderInter
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return User::class === $resourceClass;
+        return Role::class === $resourceClass;
     }
 
     public function getCollection(string $resourceClass, string $operationName = null)
     {
-        $em = $this->entityManager->getRepository(User::class);
+        $em = $this->entityManager->getRepository(Role::class);
         //$this->getUser();
         //$user = $this->security->getUser();
        // dd($this->security->getUser()->getRole()->getLibelle());
@@ -37,25 +37,22 @@ final class UserGetCollectionDataProvider implements CollectionDataProviderInter
       //dd($this->security->getUser()->getRoles());
         if($this->security->getUser()->getRoles() === ['ROLE_ADMIN_SYSTEME']){
 
-            $user = $em->findByLikeRoles('%"ROLE_CAISSIER_SYSTEME"%');
+            $role = $em->findByRoleLike('%CAISSIER_SYSTEME%');
             //dd($user);
             //$user = $em->findBy(
             //    ['partenaire' => null,'roles' => 'ROLE_CAISSIER']
            // );
         }elseif($this->security->getUser()->getRoles() === ['ROLE_SUPER_ADMIN_SYSTEME']){
-            $user = $em->findBy(
-                ['partenaire' => null]
-            );
+            $role = $em->findByRoleLike('%SYSTEME%');
+
         }elseif ($this->security->getUser()->getRoles() === ['ROLE_PARTENAIRE']) {
            // dd($this->security->getUser()->getPartenaire()->getId());
-            $user = $em->findBy([
-                'partenaire' => $this->security->getUser()->getPartenaire()->getId()
-            ]);
+           $role = $em->findByRoleLike('%ADMIN_PARTENAIRE%');
+
         }elseif ($this->security->getUser()->getRoles() === ['ROLE_ADMIN_PARTENAIRE']) {
             // dd($this->security->getUser()->getPartenaire()->getId());
-             $user = $em->findBy([
-                 'partenaire' => $this->security->getUser()->getPartenaire()->getId(), 'role' => 6
-             ]);
+            $role = $em->findByRoleLike('%CAISSIER_PARTENAIRE%');
+
          }elseif ($this->security->getUser()->getRoles() === ['ROLE_CAISSIER_SYSTEME']) {
             $return = [
                 "code"=>"403",
@@ -67,6 +64,6 @@ final class UserGetCollectionDataProvider implements CollectionDataProviderInter
               $response->setStatusCode(JsonResponse::HTTP_FORBIDDEN);
               return $response;
          }
-        return $user;
+        return $role;
     }
 }

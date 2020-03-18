@@ -7,8 +7,8 @@ security:
     role_hierarchy:
         ROLE_ADMIN_PARTENAIRE: ROLE_USER_PARTENAIRE
         ROLE_PARTENAIRE: [ROLE_ADMIN_PARTENAIRE, ROLE_USER_PARTENAIRE]
-        ROLE_ADMIN: ROLE_CAISSIER
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ADMIN_SYSTEME: ROLE_CAISSIER_SYSTEME
+        ROLE_SUPER_ADMIN_SYSTEME: [ROLE_ADMIN_SYSTEME, ROLE_ALLOWED_TO_SWITCH]
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -65,4 +65,3 @@ security:
          - { path: ^/creationuser, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: '^/api/creation_compte', roles: [ROLE_ADMIN] }

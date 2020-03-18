@@ -61,6 +61,8 @@ class CompteVoter extends Voter
                        
                    // }
                     return true;
+               }elseif ($this->security->isGranted('ROLE_ADMIN_SYSTEME')) {
+                   return true;
                }
                 
                 break;

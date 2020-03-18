@@ -39,7 +39,7 @@ class PartenaireVoter extends Voter
             case 'PARTENAIRE_EDIT':
                 // logic to determine if the user can EDIT
                 // return true or false
-                if($this->security->isGranted("ROLE_ADMIN")){
+                if($this->security->isGranted("ROLE_ADMIN_SYSTEME")){
                     return true;
                 }
                 break;
@@ -52,7 +52,7 @@ class PartenaireVoter extends Voter
                     }elseif ($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
                         return true;
                     }
-                }elseif($this->security->isGranted('ROLE_ADMIN')){
+                }elseif($this->security->isGranted('ROLE_ADMIN_SYSTEME')){
                     return true;
                 }
 
