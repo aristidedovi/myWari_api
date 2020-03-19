@@ -76,12 +76,18 @@ class Compte
      */
     private $affectations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="compteSender", orphanRemoval=true)
+     */
+    private $transactions;
+
     public function __construct()
     {
         $this->depots = new ArrayCollection();
         $this->create_at = new \DateTime();
         $this->solde = 0;
         $this->affectations = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
 
     }
 
@@ -194,6 +200,37 @@ class Compte
             // set the owning side to null (unless already changed)
             if ($affectation->getCompte() === $this) {
                 $affectation->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setCompteSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->contains($transaction)) {
+            $this->transactions->removeElement($transaction);
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCompteSender() === $this) {
+                $transaction->setCompteSender(null);
             }
         }
 

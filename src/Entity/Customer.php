@@ -3,10 +3,25 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *                  "get",
+ *                  "post"
+ *          },
+ *              itemOperations={
+ *                "get" ,
+ *                "put",
+ *                "delete"
+ *              },
+ *          normalizationContext={"groups" = {"customer:read"}},
+ *          denormalizationContext={"groups" = {"customer:write"}}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  */
 class Customer
@@ -20,43 +35,67 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100)
+     *  @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
+     *  @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $genre;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
+     *  @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $identityCard;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100,nullable=true)
+     *  @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $typeIdentityCard;
 
     /**
      * @ORM\Column(type="string", length=100)
+     *  @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100,nullable=true)
+     *  @Groups({"customer:read","customer:write","transaction:read","transaction:write"})
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+    private $createdAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="customerSender", orphanRemoval=true)
+     */
+    private $transactions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="customerRetrait")
+     */
+    private $transactionRetait;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+        $this->transactionRetait = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -149,12 +188,74 @@ class Customer
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setCustomerSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->contains($transaction)) {
+            $this->transactions->removeElement($transaction);
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCustomerSender() === $this) {
+                $transaction->setCustomerSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactionRetait(): Collection
+    {
+        return $this->transactionRetait;
+    }
+
+    public function addTransactionRetait(Transaction $transactionRetait): self
+    {
+        if (!$this->transactionRetait->contains($transactionRetait)) {
+            $this->transactionRetait[] = $transactionRetait;
+            $transactionRetait->setCustomerRetrait($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransactionRetait(Transaction $transactionRetait): self
+    {
+        if ($this->transactionRetait->contains($transactionRetait)) {
+            $this->transactionRetait->removeElement($transactionRetait);
+            // set the owning side to null (unless already changed)
+            if ($transactionRetait->getCustomerRetrait() === $this) {
+                $transactionRetait->setCustomerRetrait(null);
+            }
+        }
 
         return $this;
     }
