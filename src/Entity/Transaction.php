@@ -14,7 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          },
  *              itemOperations={
  *                "get" ,
- *                "put"={"route_name"="transaction_retrait", "method"="put","read"=true},
+ *                "put",
+ *                "retrait"={"route_name"="transaction_retrait", "method"="put","read"=true},
  *                "delete"
  *              },
  *          normalizationContext={"groups" = {"transaction:read"}},
