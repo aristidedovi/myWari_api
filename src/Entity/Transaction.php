@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          },
  *              itemOperations={
  *                "get" ,
- *                "put",
+ *                "put"={"route_name"="transaction_retrait", "method"="put","read"=true},
  *                "delete"
  *              },
  *          normalizationContext={"groups" = {"transaction:read"}},
@@ -80,12 +80,18 @@ class Transaction
      */
     private $customerRetrait;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $isRetiret;
+
     public function __construct()
     {
         $t = time();
         $this->createdAt = new \DateTime();
         $this->numero = date("ymHdis",$t);
         $this->codeEnvoie = date("His",$t);
+        $this->isRetiret = false;
     }
 
     public function getId(): ?int
@@ -185,6 +191,18 @@ class Transaction
     public function setCustomerRetrait(?Customer $customerRetrait): self
     {
         $this->customerRetrait = $customerRetrait;
+
+        return $this;
+    }
+
+    public function getIsRetiret(): ?bool
+    {
+        return $this->isRetiret;
+    }
+
+    public function setIsRetiret(?bool $isRetiret): self
+    {
+        $this->isRetiret = $isRetiret;
 
         return $this;
     }
