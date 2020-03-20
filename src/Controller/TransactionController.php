@@ -87,10 +87,12 @@ class TransactionController extends AbstractController
         $em->flush();
 
         // Your Account SID and Auth Token from twilio.com/console
-       // $account_sid = 'ACbb46d9a59673d2e21677fb0de0e5885f';
-       // $auth_token = 'f510e0d72a1b8704a051b2faa8a8e45a';
+       // $account_sid = 'Agg;
+       // $auth_token = 'f51ghkhgk';
         // In production, these should be environment variables. E.g.:
         // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
+        // https://www.twilio.com/docs/usage/secure-credentials
+        //https://www.twilio.com/docs/sms/quickstart/php#send-an-outbound-sms-with-php
 
         // A Twilio number you own with SMS capabilities
        // $twilio_number = "+12057725974";
