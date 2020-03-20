@@ -21,6 +21,7 @@ class CompteRepository extends ServiceEntityRepository
 
     public function findCompteByAffectation($value): ?Compte
     {
+        $date = new \DateTime("now");
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')
             ->setParameter('val', $value)

@@ -28,6 +28,7 @@ class AffectationsRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :val')
             ->andWhere('a.affecterEndAt > :date')
+            ->andWhere('a.affecterStartAt < :date')
             ->setParameter('val', $value)
             ->setParameter('date', $date)
             ->getQuery()
