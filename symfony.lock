@@ -451,6 +451,9 @@
     "twig/twig": {
         "version": "v2.12.3"
     },
+    "twilio/sdk": {
+        "version": "6.1.0"
+    },
     "webmozart/assert": {
         "version": "1.6.0"
     },

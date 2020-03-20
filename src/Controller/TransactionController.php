@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Twilio\Rest\Client;
+
 class TransactionController extends AbstractController
 {
   /**
@@ -84,6 +86,33 @@ class TransactionController extends AbstractController
         $em->persist($transaction);
         $em->flush();
 
+        // Your Account SID and Auth Token from twilio.com/console
+        $account_sid = 'ACbb46d9a59673d2e21677fb0de0e5885f';
+        $auth_token = 'f510e0d72a1b8704a051b2faa8a8e45a';
+        // In production, these should be environment variables. E.g.:
+        // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
+
+        // A Twilio number you own with SMS capabilities
+        $twilio_number = "+12057725974";
+
+        /*$client1 = new Client($account_sid, $auth_token);
+        $client1->messages->create(
+          $customSender->getTelephone(),
+          array(
+              'from' => $twilio_number,
+              'body' => 'Transfert de '.$transaction->getMontantTranfere().' a été effectué avec sucess: code d\'envoie = '.$transaction->getCodeEnvoie()
+          )
+        );
+
+      $client2 = new Client($account_sid, $auth_token);
+      $client2->messages->create(
+        $customRetrait->getTelephone(),
+        array(
+            'from' => $twilio_number,
+            'body' => 'Le numero '.$customSender->getTelephone().' vous a fait un transfert de '.$transaction->getMontantTranfere().'. Le code d\'envoie = '.$transaction->getCodeEnvoie()
+        )
+      );*/
+
         $return = [
             "code"=>"200",
             "content"=>"Transfert effectuer avec sucess: code d'envoie = ".$transaction->getCodeEnvoie()
@@ -108,13 +137,13 @@ class TransactionController extends AbstractController
     "genre": "M",
     "identityCard": "234567890",
     "typeIdentityCard": "ID",
-    "telephone": "21345657",
+    "telephone": "+221778580286",
     "adresse": "liberté 5"
   },
   "customerRetrait": {
     "firstname": "fatou",
     "lastname": "thiam",
-    "telephone": "25236453645",
+    "telephone": "+221778580286",
     "adresse": "liberté 5"
   }
 }
