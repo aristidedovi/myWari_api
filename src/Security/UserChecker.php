@@ -42,8 +42,14 @@ class UserChecker implements UserCheckerInterface
             throw new AccountExpiredException('...');
         }*/
         $date = new DateTime("now");
+        $trouver = false;
         if($user->getRole()->getLibelle() === 'ROLE_USER_PARTENAIRE'){
-            if($user->getAffectations()[count($user->getAffectations()) - 1]->getAffecterEndAt() < $date){
+            foreach ($user->getAffectations() as $affectation) {
+                if($affectation->getAffecterAt() < $date && $affectation->getAffecterEndAt() > $date){
+                    $trouver = true;
+                }
+            }
+            if(!$trouver){
                 throw new AccountExpiredException('...');
             }
         }
