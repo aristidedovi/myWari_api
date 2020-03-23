@@ -50,7 +50,7 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
-     * @Assert\NotBlank
+     * 
      */
     private $username;
 
@@ -77,7 +77,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     *
+     * @Groups({"user_listing:read","user_listing:write"})
      */
     private $createdAt;
 

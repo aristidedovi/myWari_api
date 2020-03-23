@@ -19,7 +19,7 @@ class UserDataPersister implements DataPersisterInterface{
 
     public function supports($data): bool
     {
-        return $data instanceof User;   
+        return $data instanceof User;
     }
 
     /**
@@ -27,14 +27,32 @@ class UserDataPersister implements DataPersisterInterface{
      */
     public function persist($data)
     {
-        if($data->getPlainPassword()){
+        //$username = null;
+
+        if($data->getUsername() && $data->getPlainPassword()){
+            $firstname = strtoupper(substr($data->getFirstname(), 0,1));
+            $lastname = strtoupper(substr($data->getLastname(), 0,1));
+            $repo = $this->entityManager->getRepository(User::class);
+            $u = $repo->findOneBy([],['id' => 'desc']);
+            $numero = $u->getId()+1;
+            $username = $firstname.''.$lastname.''.$numero;
+            $data->setUsername($username);
+
             $data->setPassword(
-                $this->userPasswordEncoder->encodePassword($data,$data->getPlainPassword())
+                $this->userPasswordEncoder->encodePassword($data,$username)
             );
+
             $data->eraseCredentials();
         }
-        $this->entityManager->persist($data);
 
+      /*  if($data->getPlainPassword()){
+            $data->setPassword(
+                $this->userPasswordEncoder->encodePassword($data,$data->getUsername())
+            );
+            $data->eraseCredentials();
+        }*/
+
+        $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
 
