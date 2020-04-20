@@ -32,6 +32,7 @@ class Partenaire
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write","compte:read","compte:write"})
      */
     private $id;
 
@@ -55,7 +56,7 @@ class Partenaire
     private $comptes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire")
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire", cascade={"remove"})
      * @ApiSubresource()
      * @Groups({"partenaire:read","partenaire:write"})
      */

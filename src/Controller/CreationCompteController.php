@@ -22,10 +22,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class CreationCompteController extends AbstractController
 {
    private $userPasswordEncoder;
+   private $entityManager;
  
-    public function __construct(UserPasswordEncoderInterface $userPasswordEncoder)
+    public function __construct(UserPasswordEncoderInterface $userPasswordEncoder,EntityManagerInterface $entityManager)
     {
       $this->userPasswordEncoder = $userPasswordEncoder;
+      $this->entityManager = $entityManager;
 
     }
 
@@ -54,15 +56,33 @@ class CreationCompteController extends AbstractController
     }
   */
           $em = $this->getDoctrine()->getManager();
+
+          if($json->partenaire->user->password == null && $json->partenaire->user->username == null ){
+            $firstname = strtoupper(substr($json->partenaire->user->firstname, 0,1));
+            $lastname = strtoupper(substr($json->partenaire->user->lastname, 0,1));
+            $repo = $this->entityManager->getRepository(User::class);
+            $u = $repo->findOneBy([],['id' => 'desc']);
+            $numero = $u->getId()+1;
+            $username = $firstname.''.$lastname.''.$numero;
+          }else{
+
+          }
+
           $user = new User();
-          $user->setUsername($json->partenaire->user->username);
-          $user->setPassword($this->userPasswordEncoder->encodePassword($user,$json->partenaire->user->password));
-          $user->setRoles($json->partenaire->user->roles); /*45054424394318*/
+          $user->setUsername($username);
+          $user->setPassword($this->userPasswordEncoder->encodePassword($user,$username));
+          //$user->setRoles($json->partenaire->user->roles); /*45054424394318*/
 
           $role = $json->partenaire->user->role;
+          $user->setRoles([$role]);
           $repo = $this->getDoctrine()->getRepository(Role::class);
-          $role = $repo->find($role);
+          $role = $repo->findOneBy([
+            'libelle' => $role
+          ]);
           $user->setRole($role);
+          //dd($user);
+
+
           $user->setFirstname($json->partenaire->user->firstname);
           $user->setLastname($json->partenaire->user->lastname);
           $user->setEmail($json->partenaire->user->email);
@@ -94,6 +114,7 @@ class CreationCompteController extends AbstractController
           //dd($compte);
 
           $em->flush();
+          return $compte;
 
     }
 
@@ -168,10 +189,11 @@ class CreationCompteController extends AbstractController
       }
         $data = $request->getContent();
         $json = json_decode($data,false);
+       // $compte = new Compte();
 
         if(isset($json->partenaire->ninea) && !isset($json->partenaire->rc)){
 
-              $this->compteSansNewPartenaire($json);
+              $compte = $this->compteSansNewPartenaire($json);
               $return = [
                 "code"=>"201",
                 "content"=>"Creation de compte su partenaire reussi"
@@ -185,10 +207,11 @@ class CreationCompteController extends AbstractController
 
         }else{
 
-              $this->compteAvecNewPartenaire($json);
+             $compte =  $this->compteAvecNewPartenaire($json);
               $return = [
                 "code"=>"201",
-                "content"=>"Creation de compte su partenaire reussi"
+                "content"=>"Creation de compte su partenaire reussi",
+                "numero" => $compte->getNumero()
               ];
               $response = new JsonResponse();
               $response->setContent(json_encode($return));

@@ -52,9 +52,9 @@ class Compte
 
     /**
      * @ORM\Column(type="datetime")
-     *
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write"})
      */
-    private $create_at;
+    private $createAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
@@ -84,7 +84,7 @@ class Compte
     public function __construct()
     {
         $this->depots = new ArrayCollection();
-        $this->create_at = new \DateTime();
+        $this->createAt = new \DateTime();
         $this->solde = 0;
         $this->affectations = new ArrayCollection();
         $this->transactions = new ArrayCollection();
@@ -122,12 +122,12 @@ class Compte
 
     public function getCreateAt(): ?\DateTimeInterface
     {
-        return $this->create_at;
+        return $this->createAt;
     }
 
-    public function setCreateAt(\DateTimeInterface $create_at): self
+    public function setCreateAt(\DateTimeInterface $createAt): self
     {
-        $this->create_at = $create_at;
+        $this->createAt = $createAt;
 
         return $this;
     }

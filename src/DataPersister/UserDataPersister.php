@@ -28,8 +28,9 @@ class UserDataPersister implements DataPersisterInterface{
     public function persist($data)
     {
         //$username = null;
+       // dd($data->getUsername());
 
-        if($data->getUsername() && $data->getPlainPassword()){
+        if($data->getUsername() == null && $data->getPlainPassword() == null) {
             $firstname = strtoupper(substr($data->getFirstname(), 0,1));
             $lastname = strtoupper(substr($data->getLastname(), 0,1));
             $repo = $this->entityManager->getRepository(User::class);
@@ -37,21 +38,24 @@ class UserDataPersister implements DataPersisterInterface{
             $numero = $u->getId()+1;
             $username = $firstname.''.$lastname.''.$numero;
             $data->setUsername($username);
+            //dd($data->getUsername());
 
             $data->setPassword(
                 $this->userPasswordEncoder->encodePassword($data,$username)
             );
-
+           // dd($data);
             $data->eraseCredentials();
         }
 
-      /*  if($data->getPlainPassword()){
+       if($data->getPlainPassword() != null){
+        //dd($data);
             $data->setPassword(
-                $this->userPasswordEncoder->encodePassword($data,$data->getUsername())
+                $this->userPasswordEncoder->encodePassword($data,$data->getPlainPassword())
             );
+           // dd($data);
             $data->eraseCredentials();
-        }*/
-
+        }
+        //dd($data);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
