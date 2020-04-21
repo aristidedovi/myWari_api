@@ -16,6 +16,9 @@
             "src/Entity/.gitignore"
         ]
     },
+    "behat/transliterator": {
+        "version": "v1.3.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -110,8 +113,62 @@
     "fig/link-util": {
         "version": "1.1.0"
     },
+    "hoa/compiler": {
+        "version": "3.17.08.08"
+    },
+    "hoa/consistency": {
+        "version": "1.17.05.02"
+    },
+    "hoa/event": {
+        "version": "1.17.01.13"
+    },
+    "hoa/exception": {
+        "version": "1.17.01.16"
+    },
+    "hoa/file": {
+        "version": "1.17.07.11"
+    },
+    "hoa/iterator": {
+        "version": "2.17.01.10"
+    },
+    "hoa/math": {
+        "version": "1.17.05.16"
+    },
+    "hoa/protocol": {
+        "version": "1.17.01.14"
+    },
+    "hoa/regex": {
+        "version": "1.17.01.13"
+    },
+    "hoa/stream": {
+        "version": "1.17.02.21"
+    },
+    "hoa/ustring": {
+        "version": "4.17.01.16"
+    },
+    "hoa/visitor": {
+        "version": "2.17.01.16"
+    },
+    "hoa/zformat": {
+        "version": "1.17.01.10"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "jms/metadata": {
+        "version": "2.1.0"
+    },
+    "jms/serializer": {
+        "version": "3.6.0"
+    },
+    "jms/serializer-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "384cec52df45f3bfd46a09930d6960a58872b268"
+        }
     },
     "lcobucci/jwt": {
         "version": "3.3.1"
@@ -252,6 +309,9 @@
             ".env"
         ]
     },
+    "symfony/form": {
+        "version": "v4.3.11"
+    },
     "symfony/framework-bundle": {
         "version": "4.2",
         "recipe": {
@@ -280,6 +340,9 @@
     "symfony/inflector": {
         "version": "v4.3.9"
     },
+    "symfony/intl": {
+        "version": "v4.3.11"
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -292,8 +355,14 @@
     "symfony/mime": {
         "version": "v4.3.9"
     },
+    "symfony/options-resolver": {
+        "version": "v4.3.11"
+    },
     "symfony/orm-pack": {
         "version": "v1.0.7"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.15.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.13.1"
@@ -365,6 +434,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.3.9"
+    },
+    "symfony/templating": {
+        "version": "v4.3.11"
     },
     "symfony/translation": {
         "version": "3.3",
@@ -453,6 +525,18 @@
     },
     "twilio/sdk": {
         "version": "6.1.0"
+    },
+    "vich/uploader-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c4f5755b37fb65b9c6a3cbdae91205c15a137ed4"
+        },
+        "files": [
+            "config/packages/vich_uploader.yaml"
+        ]
     },
     "webmozart/assert": {
         "version": "1.6.0"

@@ -16,6 +16,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
  * @ApiResource(
@@ -100,6 +103,16 @@ class User implements AdvancedUserInterface
      * @Groups({"user_listing:read","user_listing:write", "partenaire:read"})
      */
     private $partenaire;
+
+    /**
+     * @var MediaObject|null
+     *
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ApiProperty(iri="http://schema.org/image")
+     * @Groups({"user_listing:read","user_listing:write", "partenaire:read","partenaire:write"})
+     */
+    public $image;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectations", mappedBy="user", orphanRemoval=true)
@@ -294,6 +307,18 @@ class User implements AdvancedUserInterface
     public function setPartenaire(?Partenaire $partenaire): self
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
