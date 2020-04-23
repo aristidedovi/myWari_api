@@ -47,6 +47,8 @@ class UserVoter extends Voter
                     if($subject === $user){
                         return true;
                     }
+                }if($this->security->isGranted('ROLE_PARTENAIRE')){
+                    return true;
                 }
                 break;
             case 'VIEW_USER':

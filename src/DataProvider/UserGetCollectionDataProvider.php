@@ -48,7 +48,7 @@ final class UserGetCollectionDataProvider implements CollectionDataProviderInter
 
         }elseif ($this->security->getUser()->getRoles() === ['ROLE_PARTENAIRE']) {
            // dd($this->security->getUser()->getPartenaire()->getId());
-            $user = $em->findAllPartenaireUser('%ROLE_PARTENAIRE%');
+            $user = $em->findAllPartenaireUser('%ROLE_PARTENAIRE%',$this->security->getUser()->getPartenaire()->getId());
 
         }elseif ($this->security->getUser()->getRoles() === ['ROLE_ADMIN_PARTENAIRE']) {
             // dd($this->security->getUser()->getPartenaire()->getId());

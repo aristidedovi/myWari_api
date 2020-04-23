@@ -47,11 +47,11 @@ final class RoleGetCollectionDataProvider implements CollectionDataProviderInter
 
         }elseif ($this->security->getUser()->getRoles() === ['ROLE_PARTENAIRE']) {
            // dd($this->security->getUser()->getPartenaire()->getId());
-           $role = $em->findByRoleLike('%ADMIN_PARTENAIRE%');
+           $role = $em->findByRoleLike('%PARTENAIRE%');
 
         }elseif ($this->security->getUser()->getRoles() === ['ROLE_ADMIN_PARTENAIRE']) {
             // dd($this->security->getUser()->getPartenaire()->getId());
-            $role = $em->findByRoleLike('%CAISSIER_PARTENAIRE%');
+            $role = $em->findByRoleLike('%USER_PARTENAIRE%');
 
          }elseif ($this->security->getUser()->getRoles() === ['ROLE_CAISSIER_SYSTEME']) {
             $return = [

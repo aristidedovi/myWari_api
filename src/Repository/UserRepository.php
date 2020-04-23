@@ -40,12 +40,14 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllPartenaireUser($role)
+    public function findAllPartenaireUser($role,$idPartenaire)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.roles NOT LIKE :role')
             ->andWhere('u.partenaire IS NOT NULL')
+            ->andWhere('u.partenaire = :idPartenaire')
             ->setParameter('role', $role)
+            ->setParameter('idPartenaire', $idPartenaire)
             ->getQuery()
             ->getResult()
         ;
