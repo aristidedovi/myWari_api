@@ -8,6 +8,7 @@
         "api-platform/api-pack": "^1.2",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "jms/serializer-bundle": "^3.5",
+        "knplabs/knp-snappy-bundle": "^1.7",
         "lexik/jwt-authentication-bundle": "^2.6",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/console": "4.3.*",
@@ -18,6 +19,7 @@
         "symfony/profiler-pack": "^1.0",
         "symfony/translation": "4.3.*",
         "symfony/yaml": "4.3.*",
+        "twig/intl-extra": "^3.0",
         "twilio/sdk": "^6.1",
         "vich/uploader-bundle": "^1.11.0"
     },

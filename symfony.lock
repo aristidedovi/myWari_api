@@ -170,6 +170,21 @@
             "ref": "384cec52df45f3bfd46a09930d6960a58872b268"
         }
     },
+    "knplabs/knp-snappy": {
+        "version": "v1.2.1"
+    },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        },
+        "files": [
+            "config/packages/knp_snappy.yaml"
+        ]
+    },
     "lcobucci/jwt": {
         "version": "3.3.1"
     },
@@ -519,6 +534,9 @@
     },
     "symfony/yaml": {
         "version": "v4.3.9"
+    },
+    "twig/intl-extra": {
+        "version": "v3.0.3"
     },
     "twig/twig": {
         "version": "v2.12.3"

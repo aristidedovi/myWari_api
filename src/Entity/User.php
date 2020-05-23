@@ -86,7 +86,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"user_listing:read","user_listing:write"})
+     * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write"})
      */
     private $isActive;
 
@@ -205,7 +205,7 @@ class User implements AdvancedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-      //  $roles[] = 'ROLE_USER';
+        //  $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -227,7 +227,7 @@ class User implements AdvancedUserInterface
 
     public function setPassword(string $password): self
     {
-       // $user = new User($this->encoder);
+        // $user = new User($this->encoder);
         $this->password = $password;
 
         return $this;
@@ -401,5 +401,4 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
-
 }

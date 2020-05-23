@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
@@ -25,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          denormalizationContext={"groups" = {"partenaire:write"}},
  *          )
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
+ * 
  */
 class Partenaire
 {
@@ -39,7 +42,7 @@ class Partenaire
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"user_listing:read","user_listing:write","partenaire:read","partenaire:write","compte:read","compte:write"})
-     *
+     * @ApiFilter(SearchFilter::class, strategy="exact")
      */
     private $ninea;
 
@@ -74,7 +77,6 @@ class Partenaire
         $this->comptes = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->isActive = true;
-       
     }
 
     public function getId(): ?int
@@ -179,6 +181,4 @@ class Partenaire
 
         return $this;
     }
-
-
 }

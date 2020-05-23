@@ -25,8 +25,7 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('u.roles LIKE :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllSystemeUser($role)
@@ -36,11 +35,10 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('u.partenaire IS NULL')
             ->setParameter('role', $role)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-    public function findAllPartenaireUser($role,$idPartenaire)
+    public function findAllPartenaireUser($role, $idPartenaire)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.roles NOT LIKE :role')
@@ -49,8 +47,7 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('role', $role)
             ->setParameter('idPartenaire', $idPartenaire)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     // /**

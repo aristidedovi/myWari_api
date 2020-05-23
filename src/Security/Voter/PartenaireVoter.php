@@ -15,7 +15,6 @@ class PartenaireVoter extends Voter
     public function __construct(Security $security)
     {
         $this->security = $security;
-        
     }
 
     protected function supports($attribute, $subject)
@@ -39,20 +38,23 @@ class PartenaireVoter extends Voter
             case 'PARTENAIRE_EDIT':
                 // logic to determine if the user can EDIT
                 // return true or false
-                if($this->security->isGranted("ROLE_ADMIN_SYSTEME")){
+                if ($this->security->isGranted("ROLE_ADMIN_SYSTEME")) {
                     return true;
                 }
                 break;
             case 'PARTENAIRE_VIEW':
                 // logic to determine if the user can VIEW
+                if ($this->security->isGranted('ROLE_ADMIN_SYSTEME')) {
+                    return true;
+                }
                 // return true or false
-                if($subject->getIsActive() === true){
-                    if (($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_PARTENAIRE'))){
+                if ($subject->getIsActive() === true) {
+                    if (($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_PARTENAIRE'))) {
                         return true;
-                    }elseif ($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
+                    } elseif ($subject === $user->getPartenaire() && $this->security->isGranted('ROLE_ADMIN_PARTENAIRE')) {
                         return true;
                     }
-                }elseif($this->security->isGranted('ROLE_ADMIN_SYSTEME')){
+                } elseif ($this->security->isGranted('ROLE_ADMIN_SYSTEME') || $this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')) {
                     return true;
                 }
 

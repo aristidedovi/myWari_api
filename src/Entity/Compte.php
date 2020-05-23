@@ -33,6 +33,7 @@ class Compte
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"partenaire:read","partenaire:write","compte:read","compte:write","depot:read","depot:write"})
      */
     private $id;
 
@@ -88,7 +89,6 @@ class Compte
         $this->solde = 0;
         $this->affectations = new ArrayCollection();
         $this->transactions = new ArrayCollection();
-
     }
 
     public function getId(): ?int

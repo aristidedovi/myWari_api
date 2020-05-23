@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ContratController!
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<div class="row" style="width: 800px; align:center;margin: auto;">
+			<h4>
+				CONTRAT DE PARTENARIAT COMMERCIAL POUR
+				{{ partenaire.getUsers()[0].firstname | upper }}
+			</h4>
+			<p>Ce contrat est fait ce jour
+				{{ today }}
+				en conforme copies originales, entre
+			</p>
+
+			<p>(1) ____________________WARI____________________________________________
+			</p>
+			<p>(2) ______{{ partenaire.ninea }}______{{ partenaire.rc  }}_________________________________________________
+			</p>
+
+
+			<p><br/>1. NOM DU PARTENARIAT ET ACTIVITE
+			</p>
+
+			<p>1.1 Nature des activités: Le Partenaires cité
+				{{ partenaire.ninea }}
+				donne son accord d'être considérés comme partenaire commerciaux.
+			</p>
+			<ul class="list-group">
+				<li class="list-group-item">Nom  complet Partenaire :
+					{{ partenaire.getUsers()[0].getFirstname() }}
+					{{ partenaire.getUsers()[0].getlastname() }}</li>
+				<li class="list-group-item">Email :
+					{{ partenaire.getUsers()[0].getEmail() }}</li>
+				<li class="list-group-item">Téléphone :
+					{{ partenaire.getUsers()[0].getTelephone() }}</li>
+			</ul>
+
+			<p>
+				<br/>1.2 Nom: Les Partenaires cités ci-dessus donnent leur accord, pour que le partenariat commercial soit exercé sous le nom:
+			</p>
+			<p>________________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ___________________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            _____________________________________________
+			</p>
+
+			<p>1.3 Adresse officielle:  Les Partenaires cités ci-dessus donnent leur accord pour que le siège du partenariat commercial soit:
+			</p>
+			<p>________________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ___________________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ______________________________________________
+			</p>
+
+			<p>2. TERMES
+			</p>
+
+			<p>2.1 Le partenariat commence le  ______________________________  et continue jusqu'à la fin de cet accord.
+			</p>
+
+			<p>3. CONTRIBUTION AU PARTENARIAT
+			</p>
+
+			<p>3.1 La contribution de chaque partenaire au capital listée ci-dessous se compose des éléments suivants :
+			</p>
+
+			<p>(1) ________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            _______________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ______________________________________________________________________
+			</p>
+
+			<p>(2) ________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ________________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            _____________________________________________________________________
+			</p>
+
+			<p>(3) _________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ________________________________________________________________________________________
+																																																																																																																																																																																																																																																																																            ___________________________________________________________________
+			</p>
+
+
+			<p>4. RÉPARTITION DES BÉNÉFICES ET DES PERTES
+			</p>
+
+			<p>4.1 Les Partenaires se partageront les profits et les pertes du partenariat commercial de la manière suivante :
+			</p>
+		</p>_________________________________________________________________________________________
+																																																																																																																																								        _____________________________________________________________________________________________
+																																																																																																																																								        _____________________________________________________________________________________________
+																																																																																																																																								        _____________________________________________________________________________________________
+																																																																																																																																								        _____________________________________________________________________________________________
+																																																																																																																																								        ____________________________________________________________
+	</p>
+
+	<p>5. PARTENAIRES ADDITIONNELS
+	</p>
+
+	<p>5.1 Aucune personne ne peut être ajoutée en tant que partenaire et aucune autre autre activité ne peut être menée par le partenariat sans le consentement écrit de tous les partenaires.
+	</p>
+
+	<p>6.MODALITÉS BANCAIRES ET TERMES FINANCIERS
+	</p>
+
+	<p>6.1 Les Partenaires doivent avoir un compte bancaire au nom du partenariat sur lequel les chèques doivent être signés par au moins  ___________________ des Partenaires.
+	</p>
+
+	<p>6.2 Les Partenaires doivent tenir une comptabilité complète du partenariat et la rendre disponible à tous les Partenaires à tout moment.
+	</p>
+
+	<p>7. GESTION DES ACTIVITÉS DE PARTENARIAT
+	</p>
+
+	<p>7.1 Chaque partenaire peut prendre part dans la gestion du partenariat.
+	</p>
+
+	<p>7.2 Tout désaccord qui intervient dans l'exploitation du partenariat, sera réglé par les partenaires détenant la majorité des parts du partenariat.
+	</p>
+
+	<p>8. DÉPART D'UN PARTENAIRE COMMERCIAL
+	</p>
+
+	<p>8.1 Si un partenaire se retire du partenariat commercial pour une raison quelconque, y compris le décès, les autres partenaires peuvent continuer à exploiter le partenariat sous le même nom.
+	</p>
+
+	<p>8.2 Le partenaire qui se retire est tenu de donner un préavis écrit d'au moins soixante (60) jours de son intention de se retirer et est tenu de vendre ses parts du partenariat commercial.
+	</p>
+
+	<p>8.3 Aucun partenaire ne doit céder ses actions dans le partenariat commercial à une autre partie sans le consentement écrit des autres partenaires.
+	</p>
+
+	<p>8.4 Le ou les partenaires restants paieront au partenaire qui se retire, ou au représentant légal du partenaire décédé ou handicapé, la valeur de ses parts dans le partenariat, ou (a) la somme de son capital, (b) des emprunts impayés qui lui sont dus, c) sa quote-part des bénéfices nets cumulés non distribués dans son compte, et (d) son intérêt dans toute plus-value préalablement convenue de la valeur du partenariat par rapport à sa valeur comptable. Aucune valeur de bonne volonté ne doit être incluse dans la détermination de la valeur des parts du partenaire.
+	</p>
+
+	<p>9. CLAUSE DE NON CONCURRENCE
+	</p>
+
+	<p>9.1 Un partenaire qui se retire du partenariat ne doit pas s'engager directement ou indirectement dans une entreprise qui est ou serait en concurrence avec la nature des activités actuelles ou futures du partenariat pendant  ___________________.
+	</p>
+
+	<p>10. MODIFICATION DE L’ACCORD DE PARTENARIAT
+	</p>
+
+	<p>10. 1 Ce contrat de partenariat commercial ne peut être modifié sans le consentement écrit de tous les partenaires.</p>
+</div></div>{% endblock %}
