@@ -57,14 +57,15 @@ class MediaObject
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
-        /**
+    /**
      * @var string|null
      *
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"media_object_read"})
+     * @Groups({"media_object_read","user_listing:read","user_listing:write", "partenaire:read","partenaire:write"})
      */
     public $contentUrl;
 
@@ -73,13 +74,14 @@ class MediaObject
      *
      * @Assert\NotNull(groups={"media_object_create"})
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
-     *
+     * @Groups({"media_object_read","user_listing:read","user_listing:write", "partenaire:read","partenaire:write"})
      */
     public $file;
 
     /**
      * @var string|null
      * @ORM\Column(nullable=true)
+     * @Groups({"media_object_read","user_listing:read","user_listing:write", "partenaire:read","partenaire:write"})
      */
     private $filePath;
 

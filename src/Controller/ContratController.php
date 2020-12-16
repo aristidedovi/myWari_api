@@ -41,7 +41,7 @@ class ContratController extends AbstractController
 
         return new PdfResponse(
             $this->knpSnappy->getOutputFromHtml($html),
-            'file.pdf'
+            'contrat du partenaire '.$partenaire->getNinea().'.pdf' 
         );
 
         /* return $this->render('contrat/index.html.twig', [

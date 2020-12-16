@@ -18,3 +18,7 @@ connexion:
 swagger_ui:
   path: /docs
   controller: api_platform.swagger.action.ui
+
+api_graphql_entrypoint:
+  path: /api/graphql
+  controller: api_platform.graphql.action.entrypoint

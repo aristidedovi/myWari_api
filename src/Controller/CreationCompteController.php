@@ -7,6 +7,7 @@ use App\Entity\Depot;
 use App\Entity\Partenaire;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Entity\MediaObject;
 use App\Security\CompteNumero;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -87,6 +88,14 @@ class CreationCompteController extends AbstractController
           $user->setLastname($json->partenaire->user->lastname);
           $user->setEmail($json->partenaire->user->email);
           $user->setTelephone($json->partenaire->user->telephone);
+
+          $repoImage = $this->getDoctrine()->getRepository(MediaObject::class);
+          $image = $repoImage->findOneBy([
+            'id' => substr(strrchr($json->partenaire->user->image,'/'),1)
+          ]);
+          $user->setImage($image);
+          //dd($image);
+         // dd($user);
           $em->persist($user);
 
           $partenaire = new Partenaire();

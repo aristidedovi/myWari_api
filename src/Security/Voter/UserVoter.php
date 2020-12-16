@@ -87,6 +87,7 @@ class UserVoter extends Voter
                 // logic to determine if the user can VIEW
                 // return true or false
                 if ($this->security->isGranted('ROLE_SUPER_ADMIN_SYSTEME')){
+                    //return true;
                     if($subject->getRoles() === ['ROLE_CAISSIER_SYSTEME'] || $subject->getRoles() === ['ROLE_ADMIN_SYSTEME'] || $subject->getRoles() === ['ROLE_ADMIN_PATENAIRE'] ){
                         return true;
                     }

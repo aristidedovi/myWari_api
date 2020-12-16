@@ -6,16 +6,21 @@ use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
     private $encoder;
 
+    /** @var Generator */ 
+    protected $faker;
+
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
     }
+    
     public function load(ObjectManager $manager)
     {
 
@@ -59,6 +64,8 @@ class AppFixtures extends Fixture
         $manager->persist($user);
         // $product = new Product(); !31ArIs93DoVi08
         // $manager->persist($product);
+
+       
 
         $manager->flush();
     }

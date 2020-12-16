@@ -1,0 +1,10 @@
+App\Entity\User:
+  user_{1..100}:
+    username: <username()>
+    password: <password()>
+    createdAt: <dateTime()>
+    firstname: <firstname()>
+    lastname: <lastname()>
+    email: <email()>
+    telephone: <numberBetween(1,200)>
+    role_id: <>

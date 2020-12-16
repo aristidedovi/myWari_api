@@ -107,7 +107,7 @@ class User implements AdvancedUserInterface
     /**
      * @var MediaObject|null
      *
-     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\ManyToOne(targetEntity=MediaObject::class,  cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
      * @Groups({"user_listing:read","user_listing:write", "partenaire:read","partenaire:write"})
